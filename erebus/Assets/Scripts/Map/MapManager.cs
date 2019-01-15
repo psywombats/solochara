@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Tiled2Unity;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Object = UnityEngine.Object;
@@ -11,7 +10,6 @@ public class MapManager : MonoBehaviour, MemoryPopulater {
     public Map ActiveMap { get; set; }
     public AvatarEvent Avatar { get; private set; }
     public DuelMap ActiveDuelMap { get; set; }
-    public SceneBlendController BlendController { get; set; }
 
     private MapCamera mapCamera;
     public MapCamera Camera {
@@ -44,7 +42,7 @@ public class MapManager : MonoBehaviour, MemoryPopulater {
     public void PopulateMemory(Memory memory) {
         if (ActiveMap != null) {
             Avatar.PopulateMemory(memory);
-            memory.mapName = ActiveMap.fullName;
+            memory.mapName = ActiveMap.name;
         }
     }
 
@@ -80,7 +78,7 @@ public class MapManager : MonoBehaviour, MemoryPopulater {
         Assert.IsNotNull(ActiveMap);
         Map newMapInstance = InstantiateMap(mapName);
         MapEvent target = newMapInstance.GetEventNamed(targetEventName);
-        RawTeleport(newMapInstance, target.Position);
+        RawTeleport(newMapInstance, target.positionXY);
     }
 
     private void RawTeleport(Map map, IntVector2 location) {
@@ -102,7 +100,8 @@ public class MapManager : MonoBehaviour, MemoryPopulater {
     private Map InstantiateMap(string mapName) {
         GameObject newMapObject = null;
         if (ActiveMap != null) {
-            string localPath = ActiveMap.resourcePath + "/" + mapName;
+            // TODO: new project
+            string localPath = ""; // ActiveMap.resourcePath + "/" + mapName;
             newMapObject = Resources.Load<GameObject>(localPath);
         }
         if (newMapObject == null) {

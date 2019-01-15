@@ -10,7 +10,7 @@ public class BattleUnit {
     public IntVector2 location { get; set; }
     public bool hasActedThisTurn { get; private set; }
 
-    public BattleEvent doll {
+    public DollTargetEvent doll {
         get {
             return battle.controller.GetDollForUnit(this);
         }

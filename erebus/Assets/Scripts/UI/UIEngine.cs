@@ -3,11 +3,8 @@ using UnityEngine;
 using System.Collections;
 
 public class UIEngine : MonoBehaviour, InputListener {
-
-    public Canvas InteractiveCanvas;
+    
     public UnityEngine.UI.Text DebugBox;
-    public GameObject MenuAttachmentPoint;
-    public FadingUIComponent Tint;
 
     public void Start() {
         Global.Instance().Input.PushListener(this);
@@ -24,25 +21,13 @@ public class UIEngine : MonoBehaviour, InputListener {
         return false;
     }
 
-    public IEnumerator DisplayMenu(GameObject menuObject) {
-        MenuComponent menuComponent = menuObject.GetComponent<MenuComponent>();
-        menuComponent.Alpha = 0.0f;
-
-        yield return menuComponent.FadeInRoutine();
-    }
-
     public IEnumerator GlobalFadeRoutine(bool fadeOut) {
-        if (fadeOut) {
-            yield return Tint.Deactivate(null, false);
-        } else {
-            yield return Tint.Activate(null);
-        }
+        // TODO: new project
+        yield return null;
     }
 
     private IEnumerator PauseRoutine() {
-        InteractiveCanvas.enabled = true;
-        yield return StartCoroutine(DisplayMenu(PauseMenuComponent.Spawn(InteractiveCanvas.gameObject, () => {
-            InteractiveCanvas.enabled = false;
-        })));
+        // TODO: new project
+        yield return null;
     }
 }

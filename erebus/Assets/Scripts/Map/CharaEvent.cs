@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Tiled2Unity;
 using UnityEngine;
 using System;
 
@@ -68,7 +67,7 @@ public class CharaEvent : MonoBehaviour {
     }
 
     public void FaceToward(IntVector2 pos) {
-        facing = OrthoDirExtensions.DirectionOf(pos - GetComponent<MapEvent>().Position);
+        facing = OrthoDirExtensions.DirectionOf(pos - GetComponent<MapEvent>().positionXY);
     }
 
     public void SetAppearance(string spriteKey) {
@@ -80,29 +79,13 @@ public class CharaEvent : MonoBehaviour {
         return animator.spriteName;
     }
 
-    // checks if the given location is passable for this character
-    // takes into account both chip and event
-    public bool CanPassAt(IntVector2 loc) {
-        if (!GetComponent<MapEvent>().SwitchEnabled) {
-            return true;
-        }
-
-        foreach (MapEvent mapEvent in parent.GetEventsAt(layer, loc)) {
-            if (!mapEvent.IsPassableBy(this)) {
-                return false;
-            }
-        }
-
-        return GetComponent<MapEvent>().CanPassAt(loc);
-    }
-
     public IEnumerator PathToRoutine(IntVector2 location) {
         List<IntVector2> path = parent.FindPath(this, location);
         if (path == null) {
             yield break;
         }
         foreach (IntVector2 target in path) {
-            OrthoDir dir = OrthoDirExtensions.DirectionOf(target - GetComponent<MapEvent>().Position);
+            OrthoDir dir = OrthoDirExtensions.DirectionOf(target - GetComponent<MapEvent>().positionXY);
             yield return StartCoroutine(GetComponent<MapEvent>().StepRoutine(dir));
         }
     }

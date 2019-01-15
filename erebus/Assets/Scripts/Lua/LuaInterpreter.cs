@@ -200,17 +200,7 @@ public class LuaInterpreter : MonoBehaviour {
         RunStaticRoutineFromLua(Global.Instance().UIEngine.GlobalFadeRoutine(true));
     }
 
-    // Scene interaction routines
-
-    private static void RunSceneCommand(SceneCommand command) {
-        // TODO: get the real title in here
-        SceneScript script = new SceneScript(command, "anonymous command");
-        Global.Instance().ScenePlayer.gameObject.SetActive(true);
-        RunStaticRoutineFromLua(Global.Instance().ScenePlayer.PlayCommandFromLua(script));
-    }
-
     private static void Speak(DynValue line) {
-        // line is interpreted as either a system command or tagged dialog
-        RunSceneCommand(new SpokenLineCommand(line.String));
+        // TODO: new project
     }
 }

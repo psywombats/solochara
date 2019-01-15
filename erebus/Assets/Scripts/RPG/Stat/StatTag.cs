@@ -6,8 +6,15 @@ public enum StatTag {
     MHP,
     HP,
 
-    RES_FIRE,
-    WEAK_FIRE,
+    AP,
 
-    MOVE,
+    MAG,
+    DEF,
+    RES,
+
+    HEAL_PERCENT,
+    EVADE_PERCENT,
+    STAGGER_OFF,
+    STAGGER_DEF,
+    STAGGER_PEN,
 }

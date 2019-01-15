@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Tiled2Unity;
 using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
@@ -154,7 +153,7 @@ public class CharaAnimator : MonoBehaviour {
         }
 
         Vector3 ourScreen = cam.GetCameraComponent().WorldToScreenPoint(parentEvent.transform.position);
-        Vector3 targetWorld = MapEvent3D.TileToWorldCoords(parentEvent.Position + normalDir.XY());
+        Vector3 targetWorld = MapEvent3D.TileToWorldCoords(parentEvent.positionXY + normalDir.XY());
         Vector3 targetScreen = cam.GetCameraComponent().WorldToScreenPoint(targetWorld);
         Vector3 delta = targetScreen - ourScreen;
         return OrthoDirExtensions.DirectionOf(new Vector2(delta.x, -delta.y));

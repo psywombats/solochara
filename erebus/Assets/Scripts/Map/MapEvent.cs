@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Tiled2Unity;
 using UnityEngine;
 using UnityEngine.Assertions;
 
 /**
- * The generic "thing on the map" class for MGNE2. Usually comes from Tiled.
+ * The generic "thing on the map" class
  */
 [RequireComponent(typeof(Dispatch))]
 [DisallowMultipleComponent]
-public abstract class MapEvent : TiledInstantiated {
+public abstract class MapEvent : MonoBehaviour {
     
     public const string EventEnabled = "enabled";
     public const string EventCollide = "collide";
@@ -27,13 +26,11 @@ public abstract class MapEvent : TiledInstantiated {
 
     // Editor properties
     public float tilesPerSecond = 2.0f;
-    public IntVector2 Position;
     public bool Passable = true;
     public string LuaCondition;
     [TextArea(3, 6)] public string LuaOnInteract;
     [TextArea(3, 6)] public string LuaOnCollide;
 
-    // Properties
     public LuaMapEvent luaObject { get; private set; }
     public Vector3 targetPositionPx { get; set; }
     public bool tracking { get; private set; }
@@ -60,6 +57,17 @@ public abstract class MapEvent : TiledInstantiated {
                 }
             }
             return null;
+        }
+    }
+
+    // TODO: new project
+    public IntVector2 positionXY {
+        get {
+            
+            return new IntVector2(0, 0);
+        }
+        set {
+
         }
     }
 
@@ -115,38 +123,6 @@ public abstract class MapEvent : TiledInstantiated {
 
     // public
 
-    public override void Populate(IDictionary<string, string> properties) {
-        gameObject.AddComponent<Dispatch>();
-        Position = new IntVector2(0, 0);
-        RectangleObject rect = GetComponent<RectangleObject>();
-        SetInitialLocation(rect);
-
-        // lua junk
-        if (properties.ContainsKey(PropertyCondition)) {
-            LuaCondition = properties[PropertyCondition];
-        }
-        if (properties.ContainsKey(PropertyCollide)) {
-            LuaOnCollide = properties[PropertyCollide];
-        }
-        if (properties.ContainsKey(PropertyInteract)) {
-            LuaOnInteract = properties[PropertyInteract];
-        }
-
-        // type assignment
-        if (GetComponent<RuntimeTmxObject>().TmxType == TypeChara && GetComponent<CharaEvent>() == null) {
-            gameObject.AddComponent<CharaEvent>().Populate(properties);
-        }
-        if (properties.ContainsKey(PropertyUnit) && GetComponent<BattleEvent>() == null) {
-            gameObject.AddComponent<BattleEvent>().Populate(properties);
-        }
-        if (properties.ContainsKey(PropertyTarget) && GetComponent<DollTargetEvent>() == null) {
-            gameObject.AddComponent<DollTargetEvent>().Populate(properties);
-            gameObject.GetComponent<CharaEvent>().doll.AddComponent<AfterimageComponent>();
-        }
-
-        SetDepth();
-    }
-
     public void Start() {
         luaObject = Global.Instance().Lua.CreateEvent(this);
         luaObject.Set(PropertyCollide, LuaOnCollide);
@@ -176,7 +152,6 @@ public abstract class MapEvent : TiledInstantiated {
     }
 
     public void OnValidate() {
-        SetScreenPositionToMatchTilePosition();
         SetDepth();
     }
 
@@ -185,54 +160,34 @@ public abstract class MapEvent : TiledInstantiated {
     }
 
     public OrthoDir DirectionTo(MapEvent other) {
-        return OrthoDirExtensions.DirectionOf(other.Position - Position);
+        return OrthoDirExtensions.DirectionOf(other.PositionPx - PositionPx);
     }
 
     public bool IsPassableBy(CharaEvent chara) {
         return Passable || !SwitchEnabled;
     }
 
-    public bool CanPassAt(IntVector2 loc) {
-        int thisLayerIndex = GetComponent<MapEvent>().LayerIndex;
-        for (int i = thisLayerIndex - 1; i >= 0 && i >= thisLayerIndex - 2; i -= 1) {
-            TileLayer layer = Parent.transform.GetChild(i).GetComponent<TileLayer>();
-            if (loc.x < 0 || loc.x >= Parent.width || loc.y < 0 || loc.y >= Parent.height) {
-                return false;
-            }
-            if (layer != null) {
-                if (!Parent.IsChipPassableAt(layer, loc)) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
     public bool ContainsPosition(IntVector2 loc) {
-        if (GetComponent<RectangleObject>() == null) {
-            return loc == Position;
-        }
-        IntVector2 pos1 = Position;
-        IntVector2 pos2 = Position;
-        pos2.x += (int)((GetComponent<RectangleObject>().TmxSize.x / Map.TileSizePx) - 1);
-        pos2.y += (int)((GetComponent<RectangleObject>().TmxSize.y / Map.TileSizePx) - 1);
-        return loc.x >= pos1.x && loc.x <= pos2.x && loc.y >= pos1.y && loc.y <= pos2.y;
+        // TODO: new project
+        //if (GetComponent<RectangleObject>() == null) {
+        //    return loc == Position;
+        //}
+        //IntVector2 pos1 = Position;
+        //IntVector2 pos2 = Position;
+        //pos2.x += (int)((GetComponent<RectangleObject>().TmxSize.x / Map.TileSizePx) - 1);
+        //pos2.y += (int)((GetComponent<RectangleObject>().TmxSize.y / Map.TileSizePx) - 1);
+        //return loc.x >= pos1.x && loc.x <= pos2.x && loc.y >= pos1.y && loc.y <= pos2.y;
+        return false;
     }
 
     public void SetLocation(IntVector2 location) {
-        Position = location;
-        OnValidate();
+        // TODO: new project
+        //this.position = location;
+        //OnValidate();
     }
-
-    // we have a solid TileX/TileY, please move the doll to the correct screen space
-    public abstract void SetScreenPositionToMatchTilePosition();
 
     // set the one xyz coordinate not controlled by arrow keys
     protected abstract void SetDepth();
-
-    // set the initial place we start in from Tiled
-    protected abstract void SetInitialLocation(RectangleObject rect);
 
     // called when the avatar stumbles into us
     // before the step if impassable, after if passable
@@ -266,39 +221,41 @@ public abstract class MapEvent : TiledInstantiated {
     }
 
     public IEnumerator StepRoutine(OrthoDir dir) {
-        if (tracking) {
-            yield break;
-        }
-        tracking = true;
+        // TODO: new project
+        //if (tracking) {
+        //    yield break;
+        //}
+        //tracking = true;
 
-        MapEvent mapEvent = GetComponent<MapEvent>();
-        mapEvent.Position += dir.XY();
-        targetPositionPx = mapEvent.CalculateOffsetPositionPx(dir);
-        GetComponent<Dispatch>().Signal(EventMove, dir);
+        //MapEvent mapEvent = GetComponent<MapEvent>();
+        //mapEvent.Position += dir.XY();
+        //targetPositionPx = mapEvent.CalculateOffsetPositionPx(dir);
+        //GetComponent<Dispatch>().Signal(EventMove, dir);
 
-        while (true) {
-            if (tilesPerSecond > 0) {
-                mapEvent.PositionPx = Vector3.MoveTowards(mapEvent.PositionPx, 
-                    targetPositionPx, 
-                    tilesPerSecond * Time.deltaTime);
-            } else {
-                // indicates warp speed, cap'n
-                mapEvent.PositionPx = targetPositionPx;
-            }
-            
+        //while (true) {
+        //    if (tilesPerSecond > 0) {
+        //        mapEvent.PositionPx = Vector3.MoveTowards(mapEvent.PositionPx, 
+        //            targetPositionPx, 
+        //            tilesPerSecond * Time.deltaTime);
+        //    } else {
+        //        // indicates warp speed, cap'n
+        //        mapEvent.PositionPx = targetPositionPx;
+        //    }
 
-            // TODO: ugly, I think we actually want to handle this via prefabs now
-            if (Global.Instance().Maps.Camera.target == GetComponent<MapEvent>()) {
-                Global.Instance().Maps.Camera.ManualUpdate();
-            }
 
-            if (mapEvent.PositionPx == targetPositionPx) {
-                tracking = false;
-                break;
-            } else {
-                yield return null;
-            }
-        }
+        //    // TODO: ugly, I think we actually want to handle this via prefabs now
+        //    if (Global.Instance().Maps.Camera.target == GetComponent<MapEvent>()) {
+        //        Global.Instance().Maps.Camera.ManualUpdate();
+        //    }
+
+        //    if (mapEvent.PositionPx == targetPositionPx) {
+        //        tracking = false;
+        //        break;
+        //    } else {
+        //        yield return null;
+        //    }
+        //}
+        yield return null;
     }
 
     public IEnumerator StepMultiRoutine(OrthoDir dir, int count) {

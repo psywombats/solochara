@@ -5,7 +5,7 @@ using MoonSharp.Interpreter;
 using System;
 
 [MoonSharpUserData]
-public class DollTargetEvent : TiledInstantiated {
+public class DollTargetEvent : MonoBehaviour {
 
     private static string AnimPath = "Sprites/Anim/";
     private static string ArgDuration = "duration";
@@ -65,25 +65,11 @@ public class DollTargetEvent : TiledInstantiated {
         }
     }
 
-    [MoonSharpHidden]
-    public override void Populate(IDictionary<string, string> properties) {
-        switch (properties[MapEvent.PropertyTarget]) {
-            case "attacker":
-                this.type = Type.Attacker;
-                break;
-            case "defender":
-                this.type = Type.Defender;
-                break;
-            default:
-                Debug.Assert(false);
-                break;
-        }
-    }
-
-    [MoonSharpHidden]
-    public void ConfigureToBattler(BattleEvent battler) {
-        GetComponent<CharaEvent>().SetAppearance(battler.GetComponent<CharaEvent>().GetAppearance());
-    }
+    // TODO: new project
+    //[MoonSharpHidden]
+    //public void ConfigureToBattler(BattleEvent battler) {
+    //    GetComponent<CharaEvent>().SetAppearance(battler.GetComponent<CharaEvent>().GetAppearance());
+    //}
 
     [MoonSharpHidden]
     public void PrepareForAnimation(BattleAnimationPlayer player) {
