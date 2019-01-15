@@ -110,6 +110,10 @@ internal sealed class SpriteImporter : AssetPostprocessor {
         string path = assetPath;
         string name = NameFromPath(path);
 
+        if (name.Contains("Placeholder")) {
+            return;
+        }
+
         if (path.Contains("Charas")) {
             if (!AssetDatabase.IsValidFolder("Assets/Resources/Animations/Charas/Facings/" + name)) {
                 AssetDatabase.CreateFolder("Assets/Resources/Animations/Charas/Facings", name);
