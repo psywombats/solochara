@@ -36,14 +36,20 @@ public class Stat {
 
     private static void InitializeStats() {
         stats = new Dictionary<StatTag, Stat>();
-        AddStat(StatTag.MHP,        CombinationAdditive.Instance(), "MHP",      false);
-        AddStat(StatTag.HP,         CombinationAdditive.Instance(), "HP",       false);
-        AddStat(StatTag.RES_FIRE,   CombinationAdditive.Instance(), "O-FIRE",   true);
-        AddStat(StatTag.WEAK_FIRE,  CombinationAdditive.Instance(), "X-FIRE",   true);
-        AddStat(StatTag.MOVE,       CombinationAdditive.Instance(), "MOVE",     false);
+        AddStat(StatTag.MHP,            CombinationAdditive.Instance(), "MHP");
+        AddStat(StatTag.HP,             CombinationAdditive.Instance(), "HP");
+        AddStat(StatTag.AP,             CombinationAdditive.Instance(), "AP");
+        AddStat(StatTag.MAG,            CombinationAdditive.Instance(), "MAG");
+        AddStat(StatTag.DEF,            CombinationAdditive.Instance(), "DEF");
+        AddStat(StatTag.RES,            CombinationAdditive.Instance(), "RES");
+        AddStat(StatTag.HEAL,           CombinationAdditive.Instance(), "Heal %");
+        AddStat(StatTag.EVADE,          CombinationAdditive.Instance(), "Evade %");
+        AddStat(StatTag.STAGGER_OFF,    CombinationAdditive.Instance(), "StaggerOff");
+        AddStat(StatTag.STAGGER_DEF,    CombinationAdditive.Instance(), "StaggerDef");
+        AddStat(StatTag.STAGGER_PEN,    CombinationAdditive.Instance(), "StaggerPen");
     }
 
-    private static void AddStat(StatTag tag, CombinationStrategy combinator, String nameShort, bool useBinaryEditor) {
+    private static void AddStat(StatTag tag, CombinationStrategy combinator, String nameShort, bool useBinaryEditor=false) {
         stats[tag] = new Stat(tag, combinator, nameShort, useBinaryEditor);
     }
 }

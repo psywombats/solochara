@@ -8,7 +8,7 @@ using UnityEngine;
  */
 public class Map : MonoBehaviour {
 
-    public string name;
+    public string mapName;
     public string bgmKey;
     public IntVector2 size;
 

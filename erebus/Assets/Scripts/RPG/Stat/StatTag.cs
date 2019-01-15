@@ -12,8 +12,8 @@ public enum StatTag {
     DEF,
     RES,
 
-    HEAL_PERCENT,
-    EVADE_PERCENT,
+    HEAL,
+    EVADE,
     STAGGER_OFF,
     STAGGER_DEF,
     STAGGER_PEN,

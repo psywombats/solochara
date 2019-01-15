@@ -48,7 +48,7 @@ internal sealed class SpriteImporter : AssetPostprocessor {
                 int charaHeight = textureSize.y / 4;
                 importer.spritePixelsPerUnit = charaWidth;
                 importer.spriteImportMode = SpriteImportMode.Multiple;
-                importer.spritePivot = new Vector2(charaWidth / 2, Map.TileSizePx / 2);
+                importer.spritePivot = new Vector2(charaWidth / 2, 0);
                 importer.spritesheet = new SpriteMetaData[stepCount * 4];
                 List<SpriteMetaData> spritesheet = new List<SpriteMetaData>();
                 Dictionary<int, string> facingNames = charaWidth >= 32 ? FacingNamesVX : FacingNames2K;

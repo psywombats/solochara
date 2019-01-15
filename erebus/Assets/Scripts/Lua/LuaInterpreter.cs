@@ -32,7 +32,6 @@ public class LuaInterpreter : MonoBehaviour {
         GlobalContext.Globals["cs_teleport"] = (Action<DynValue, DynValue>)Teleport;
         GlobalContext.Globals["cs_wait"] = (Action<DynValue>)Wait;
         GlobalContext.Globals["cs_fadeOutBGM"] = (Action<DynValue>)FadeOutBGM;
-        GlobalContext.Globals["cs_playScene"] = (Action<DynValue>)PlayScene;
         GlobalContext.Globals["cs_speakLine"] = (Action<DynValue>)Speak;
         GlobalContext.Globals["cs_fadeIn"] = (Action)FadeIn;
         GlobalContext.Globals["cs_fadeOut"] = (Action)FadeOut;
@@ -186,10 +185,6 @@ public class LuaInterpreter : MonoBehaviour {
 
     private static void FadeOutBGM(DynValue seconds) {
         RunStaticRoutineFromLua(Global.Instance().Audio.FadeOutRoutine((float)seconds.Number));
-    }
-
-    private static void PlayScene(DynValue sceneName) {
-        RunStaticRoutineFromLua(Global.Instance().ScenePlayer.PlaySceneFromLua(sceneName.String));
     }
 
     private static void FadeIn() {

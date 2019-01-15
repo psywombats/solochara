@@ -9,7 +9,6 @@ public class MapManager : MonoBehaviour, MemoryPopulater {
 
     public Map ActiveMap { get; set; }
     public AvatarEvent Avatar { get; private set; }
-    public DuelMap ActiveDuelMap { get; set; }
 
     private MapCamera mapCamera;
     public MapCamera Camera {
@@ -42,7 +41,7 @@ public class MapManager : MonoBehaviour, MemoryPopulater {
     public void PopulateMemory(Memory memory) {
         if (ActiveMap != null) {
             Avatar.PopulateMemory(memory);
-            memory.mapName = ActiveMap.name;
+            memory.mapName = ActiveMap.mapName;
         }
     }
 

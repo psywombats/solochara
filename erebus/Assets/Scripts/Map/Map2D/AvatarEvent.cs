@@ -45,9 +45,6 @@ public class AvatarEvent : MonoBehaviour, InputListener, MemoryPopulater {
                     case InputManager.Command.Confirm:
                         Interact();
                         return false;
-                    case InputManager.Command.Cancel:
-                        ShowMenu();
-                        return false;
                     case InputManager.Command.Debug:
                         Global.Instance().Memory.SaveToSlot(0);
                         return false;
@@ -65,7 +62,7 @@ public class AvatarEvent : MonoBehaviour, InputListener, MemoryPopulater {
     }
 
     public void PopulateMemory(Memory memory) {
-        memory.position = GetComponent<MapEvent>().Position;
+        memory.position = GetComponent<MapEvent>().positionXY;
         memory.facing = GetComponent<CharaEvent>().facing;
     }
 
@@ -78,59 +75,57 @@ public class AvatarEvent : MonoBehaviour, InputListener, MemoryPopulater {
     }
 
     private void Interact() {
-        IntVector2 target = GetComponent<MapEvent>().Position + GetComponent<CharaEvent>().facing.XY();
-        List<MapEvent> targetEvents = GetComponent<MapEvent>().Parent.GetEventsAt(GetComponent<MapEvent>().Layer, target);
-        foreach (MapEvent tryTarget in targetEvents) {
-            if (tryTarget.SwitchEnabled && !tryTarget.IsPassableBy(GetComponent<CharaEvent>())) {
-                tryTarget.GetComponent<Dispatch>().Signal(MapEvent.EventInteract, this);
-                return;
-            }
-        }
+        // TODO: new project
+        //IntVector2 target = GetComponent<MapEvent>().positionXY + GetComponent<CharaEvent>().facing.XY();
+        //List<MapEvent> targetEvents = GetComponent<MapEvent>().Parent.GetEventsAt(GetComponent<MapEvent>().Layer, target);
+        //foreach (MapEvent tryTarget in targetEvents) {
+        //    if (tryTarget.SwitchEnabled && !tryTarget.IsPassableBy(GetComponent<CharaEvent>())) {
+        //        tryTarget.GetComponent<Dispatch>().Signal(MapEvent.EventInteract, this);
+        //        return;
+        //    }
+        //}
 
-        target = GetComponent<MapEvent>().Position;
-        targetEvents = GetComponent<MapEvent>().Parent.GetEventsAt(GetComponent<MapEvent>().Layer, target);
-        foreach (MapEvent tryTarget in targetEvents) {
-            if (tryTarget.SwitchEnabled && tryTarget.IsPassableBy(GetComponent<CharaEvent>())) {
-                tryTarget.GetComponent<Dispatch>().Signal(MapEvent.EventInteract, this);
-                return;
-            }
-        }
+        //target = GetComponent<MapEvent>().Position;
+        //targetEvents = GetComponent<MapEvent>().Parent.GetEventsAt(GetComponent<MapEvent>().Layer, target);
+        //foreach (MapEvent tryTarget in targetEvents) {
+        //    if (tryTarget.SwitchEnabled && tryTarget.IsPassableBy(GetComponent<CharaEvent>())) {
+        //        tryTarget.GetComponent<Dispatch>().Signal(MapEvent.EventInteract, this);
+        //        return;
+        //    }
+        //}
     }
 
     private bool TryStep(OrthoDir dir) {
-        IntVector2 target = GetComponent<MapEvent>().Position + dir.XY();
-        GetComponent<CharaEvent>().facing = dir;
-        List<MapEvent> targetEvents = GetComponent<MapEvent>().Parent.GetEventsAt(GetComponent<MapEvent>().Layer, target);
+        // TODO: new project
+        //IntVector2 target = GetComponent<MapEvent>().Position + dir.XY();
+        //GetComponent<CharaEvent>().facing = dir;
+        //List<MapEvent> targetEvents = GetComponent<MapEvent>().Parent.GetEventsAt(GetComponent<MapEvent>().Layer, target);
 
-        List<MapEvent> toCollide = new List<MapEvent>();
-        bool passable = GetComponent<CharaEvent>().CanPassAt(target);
-        foreach (MapEvent targetEvent in targetEvents) {
-            toCollide.Add(targetEvent);
-            if (!GetComponent<CharaEvent>().CanPassAt(target)) {
-                passable = false;
-            }
-        }
+        //List<MapEvent> toCollide = new List<MapEvent>();
+        //bool passable = GetComponent<CharaEvent>().CanPassAt(target);
+        //foreach (MapEvent targetEvent in targetEvents) {
+        //    toCollide.Add(targetEvent);
+        //    if (!GetComponent<CharaEvent>().CanPassAt(target)) {
+        //        passable = false;
+        //    }
+        //}
 
-        if (passable) {
-            StartCoroutine(CoUtils.RunWithCallback(GetComponent<MapEvent>().StepRoutine(dir), () => {
-                foreach (MapEvent targetEvent in toCollide) {
-                    if (targetEvent.SwitchEnabled) {
-                        targetEvent.GetComponent<Dispatch>().Signal(MapEvent.EventCollide, this);
-                    }
-                }
-            }));
-        } else {
-            foreach (MapEvent targetEvent in toCollide) {
-                if (targetEvent.SwitchEnabled) {
-                    targetEvent.GetComponent<Dispatch>().Signal(MapEvent.EventCollide, this);
-                }
-            }
-        }
+        //if (passable) {
+        //    StartCoroutine(CoUtils.RunWithCallback(GetComponent<MapEvent>().StepRoutine(dir), () => {
+        //        foreach (MapEvent targetEvent in toCollide) {
+        //            if (targetEvent.SwitchEnabled) {
+        //                targetEvent.GetComponent<Dispatch>().Signal(MapEvent.EventCollide, this);
+        //            }
+        //        }
+        //    }));
+        //} else {
+        //    foreach (MapEvent targetEvent in toCollide) {
+        //        if (targetEvent.SwitchEnabled) {
+        //            targetEvent.GetComponent<Dispatch>().Signal(MapEvent.EventCollide, this);
+        //        }
+        //    }
+        //}
         
         return true;
-    }
-
-    private void ShowMenu() {
-        // oh shiii
     }
 }

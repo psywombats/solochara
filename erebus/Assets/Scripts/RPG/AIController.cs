@@ -21,13 +21,10 @@ public class AIController : ScriptableObject {
     // called repeatedly by the battle while ai units still have moves left
     public IEnumerator PlayNextAIActionRoutine() {
         BattleUnit actor = battle.GetFaction(Alignment.Enemy).NextMoveableUnit();
-        controller.TargetCameraToLocation(actor.location);
-        yield return new WaitForSeconds(0.8f);
 
         // TODO: the ai
 
         actor.MarkActionTaken();
-        yield return actor.doll.PostActionRoutine();
-        yield return new WaitForSeconds(0.8f);
+        yield return null;
     }
 }

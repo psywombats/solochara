@@ -15,7 +15,6 @@ public class Global : MonoBehaviour {
     public MemoryManager Memory { get; private set; }
     public AudioManager Audio { get; private set; }
     public SettingsCollection Settings { get; private set; }
-    public ScenePlayer ScenePlayer { get; private set; }
     public UIEngine UIEngine { get; private set; }
     public PartyManager Party { get; private set; }
 

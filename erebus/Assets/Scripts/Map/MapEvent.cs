@@ -22,8 +22,6 @@ public abstract class MapEvent : MonoBehaviour {
     private const string PropertyInteract = "onInteract";
     private const string PropertyCollide = "onCollide";
 
-    private static readonly string TypeChara = "Character";
-
     // Editor properties
     public float tilesPerSecond = 2.0f;
     public bool Passable = true;

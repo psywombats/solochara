@@ -21,23 +21,11 @@ public class BattleController : MonoBehaviour {
 
     // internal state
     private Dictionary<BattleUnit, DollTargetEvent> dolls;
-    private Cursor cursor;
-    private DirectionCursor dirCursor;
 
     // === INITIALIZATION ==========================================================================
 
     public BattleController() {
         dolls = new Dictionary<BattleUnit, DollTargetEvent>();
-    }
-
-    public void Start() {
-        cursor = Cursor.GetInstance();
-        cursor.gameObject.transform.parent = GetComponent<Map>().LowestObjectLayer().transform;
-        cursor.gameObject.SetActive(false);
-
-        dirCursor = DirectionCursor.GetInstance();
-        dirCursor.gameObject.transform.parent = GetComponent<Map>().LowestObjectLayer().transform;
-        dirCursor.gameObject.SetActive(false);
     }
 
     // this should take a battle memory at some point
@@ -61,7 +49,8 @@ public class BattleController : MonoBehaviour {
     public IEnumerator TurnEndAnimationRoutine(Alignment align) {
         List<IEnumerator> routinesToRun = new List<IEnumerator>();
         foreach (BattleUnit unit in battle.UnitsByAlignment(align)) {
-            routinesToRun.Add(unit.doll.PostTurnRoutine());
+            // TODO: new project
+            //routinesToRun.Add(unit.doll.PostTurnRoutine());
         }
         yield return CoUtils.RunParallel(routinesToRun.ToArray(), this);
     }
