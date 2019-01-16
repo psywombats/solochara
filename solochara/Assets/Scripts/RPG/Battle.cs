@@ -20,6 +20,7 @@ public class Battle : ScriptableObject {
     public AIController ai;
     
     public BattleController controller { get; private set; }
+
     
     private List<BattleUnit> units;
     private Dictionary<Alignment, BattleFaction> factions;

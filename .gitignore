@@ -14,9 +14,9 @@ Thumbs.db
 
 # Unity garbage #
 #################
-erebus/Library/*
-erebus/Temp/*
-erebus/obj/Debug/*
+solochara/Library/*
+solochara/Temp/*
+solochara/obj/Debug/*
 
 # Visual Studio garbage #
 #########################
