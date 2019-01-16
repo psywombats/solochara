@@ -16,9 +16,6 @@ public class BattleController : MonoBehaviour {
     // properties required upon initializion
     public Battle battle;
 
-    // all of these behaviors read + managed internally
-    public Map map { get { return GetComponent<Map>(); } }
-
     // internal state
     private Dictionary<BattleUnit, DollTargetEvent> dolls;
 

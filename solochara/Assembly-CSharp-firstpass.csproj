@@ -318,6 +318,7 @@
     <Compile Include="Assets\Plugins\MoonSharp\Interpreter\Tree\Statements\ScopeBlockStatement.cs" />
     <Compile Include="Assets\Plugins\MoonSharp\Interpreter\Tree\Statements\WhileStatement.cs" />
     <Compile Include="Assets\Plugins\ObjExporter.cs" />
+    <None Include="Assets\Plugins\BitmapFontImporter\Shaders\BFILogic.cginc" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/aking_2/solochara/solochara/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>

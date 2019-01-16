@@ -8,6 +8,6 @@ public class Unit : ScriptableObject {
     public string unitName;
     public bool unique;
     public Alignment align;
+    public List<Spell> spells;
     public StatSet stats;
-
 }

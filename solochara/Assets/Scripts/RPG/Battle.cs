@@ -8,7 +8,6 @@ using UnityEngine;
  * battle visual representation is contained in the BattleController. 
  * 
  * Flow for battles works like this:
- *  - A Tiled map is loaded that has the 'battle' property
  *  - A BattleController is created
  *  - The BattleController loads a serialized instance of this class via key
  *  - All the Tiled events participating in the battle register to the controller using the 'unit'
@@ -18,10 +17,9 @@ using UnityEngine;
 public class Battle : ScriptableObject {
 
     public AIController ai;
-    
-    public BattleController controller { get; private set; }
+    public List<BattleUnit> initialUnits;
 
-    
+    public BattleController controller { get; private set; }
     private List<BattleUnit> units;
     private Dictionary<Alignment, BattleFaction> factions;
 
@@ -42,10 +40,10 @@ public class Battle : ScriptableObject {
         return units.Where(unit => (unit.align == align));
     }
 
-    public BattleUnit AddUnitFromKey(string unitKey, IntVector2 startingLocation) {
+    public BattleUnit AddUnitFromKey(string unitKey) {
         Unit unit = Global.Instance().Party.LookUpUnit(unitKey);
         Debug.Assert(unit != null, "Unknown unit key " + unitKey);
-        BattleUnit battleUnit = new BattleUnit(unit, this, startingLocation);
+        BattleUnit battleUnit = new BattleUnit(unit, this);
         AddUnit(battleUnit);
 
         if (!factions.ContainsKey(battleUnit.align)) {
