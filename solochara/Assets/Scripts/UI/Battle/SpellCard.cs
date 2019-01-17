@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class SpellCard : SpellSelectable {
+public class SpellCard : Selectable {
 
     public Text skillName;
     public APMeter apMeter;

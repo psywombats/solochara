@@ -3,14 +3,13 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
-[RequireComponent(typeof(GridLayoutGroup))]
 public class SpellSelector : MonoBehaviour, InputListener {
 
     public GameObject attachmentPoint;
     public SpellCard spellCardPrefab;
-    public SpellSelectable dummyCardPrefab;
+    public Selectable dummyCardPrefab;
 
-    private Result<SpellSelectable> awaitingResult;
+    private Result<Selectable> awaitingResult;
     private int selectionIndex = 0;
 
     public bool OnCommand(InputManager.Command command, InputManager.Event eventType) {
@@ -45,7 +44,7 @@ public class SpellSelector : MonoBehaviour, InputListener {
         yield break;
     }
 
-    public IEnumerator SelectSpellRoutine(BattleUnit hero, Result<SpellSelectable> result) {
+    public IEnumerator SelectSpellRoutine(BattleUnit hero, Result<Selectable> result) {
         Populate(hero.unit.spells);
         this.awaitingResult = result;
         while (!awaitingResult.finished) {
@@ -65,12 +64,12 @@ public class SpellSelector : MonoBehaviour, InputListener {
         Instantiate(this.dummyCardPrefab).transform.parent = this.transform;
     }
 
-    private SpellSelectable GetSelectedCard() {
+    private Selectable GetSelectedCard() {
         return GetCardAt(selectionIndex);
     }
 
-    private SpellSelectable GetCardAt(int index) {
-        return attachmentPoint.transform.GetChild(index).GetComponent<SpellSelectable>();
+    private Selectable GetCardAt(int index) {
+        return attachmentPoint.transform.GetChild(index).GetComponent<Selectable>();
     }
 
     private void MoveSelection(int delta) {

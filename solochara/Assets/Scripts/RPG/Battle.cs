@@ -138,6 +138,6 @@ public class Battle : ScriptableObject {
         Result<List<Spell>> spellsResult = new Result<List<Spell>>();
         yield return controller.SelectSpellsRoutine(spellsResult, hero);
 
-        foreach (Spell spell)
+        
     }
 }

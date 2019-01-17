@@ -102,7 +102,6 @@
     <Compile Include="Assets\Scripts\Map\MapManager.cs" />
     <Compile Include="Assets\Scripts\Map\OrthoDir.cs" />
     <Compile Include="Assets\Scripts\Map\Tactics\BattleController.cs" />
-    <Compile Include="Assets\Scripts\Map\Tactics\DollTargetEvent.cs" />
     <Compile Include="Assets\Scripts\Map\Tactics\DuelCam.cs" />
     <Compile Include="Assets\Scripts\RPG\AIController.cs" />
     <Compile Include="Assets\Scripts\RPG\Alignment.cs" />
@@ -110,7 +109,9 @@
     <Compile Include="Assets\Scripts\RPG\BattleFaction.cs" />
     <Compile Include="Assets\Scripts\RPG\BattleUnit.cs" />
     <Compile Include="Assets\Scripts\RPG\Data\RPGMemory.cs" />
-    <Compile Include="Assets\Scripts\RPG\Intent.cs" />
+    <Compile Include="Assets\Scripts\RPG\Data\TargetType.cs" />
+    <Compile Include="Assets\Scripts\RPG\Intents\Intent.cs" />
+    <Compile Include="Assets\Scripts\RPG\Intents\IntentSpell.cs" />
     <Compile Include="Assets\Scripts\RPG\PartyManager.cs" />
     <Compile Include="Assets\Scripts\RPG\Spell.cs" />
     <Compile Include="Assets\Scripts\RPG\Stat\CombinationAdditive.cs" />
@@ -131,8 +132,10 @@
     <Compile Include="Assets\Scripts\Serialization\SystemMemory.cs" />
     <Compile Include="Assets\Scripts\Serialization\TachiMemory.cs" />
     <Compile Include="Assets\Scripts\UI\Battle\APMeter.cs" />
+    <Compile Include="Assets\Scripts\UI\Battle\Doll.cs" />
+    <Compile Include="Assets\Scripts\UI\Battle\GroupSelector.cs" />
     <Compile Include="Assets\Scripts\UI\Battle\SpellCard.cs" />
-    <Compile Include="Assets\Scripts\UI\Battle\SpellSelectable.cs" />
+    <Compile Include="Assets\Scripts\UI\Battle\Selectable.cs" />
     <Compile Include="Assets\Scripts\UI\Battle\SpellSelector.cs" />
     <Compile Include="Assets\Scripts\UI\UIEngine.cs" />
     <Compile Include="Assets\Scripts\UI\UISprite.cs" />

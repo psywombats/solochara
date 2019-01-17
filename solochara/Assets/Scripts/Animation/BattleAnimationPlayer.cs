@@ -4,8 +4,8 @@ using MoonSharp.Interpreter;
 
 public class BattleAnimationPlayer : MonoBehaviour {
 
-    public DollTargetEvent attacker = null;
-    public DollTargetEvent defender = null;
+    public Doll attacker = null;
+    public Doll defender = null;
     public BattleAnimation anim = null;
 
     public bool isPlayingAnimation { get; private set; }
@@ -29,8 +29,8 @@ public class BattleAnimationPlayer : MonoBehaviour {
 
     public IEnumerator PlayAnimationRoutine() {
         SetUpLua();
-        attacker.PrepareForAnimation(this);
-        defender.PrepareForAnimation(this);
+        attacker.PrepareForAnimation(this, Doll.Type.Attacker);
+        defender.PrepareForAnimation(this, Doll.Type.Defender);
         isPlayingAnimation = true;
         yield return anim.ToScript().RunRoutine();
         attacker.ResetAfterAnimation();

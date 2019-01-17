@@ -6,6 +6,7 @@ using UnityEngine;
 public class Unit : ScriptableObject {
 
     public string unitName;
+    public Sprite appearance;
     public bool unique;
     public Alignment align;
     public List<Spell> spells;

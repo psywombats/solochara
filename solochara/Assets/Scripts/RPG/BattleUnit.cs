@@ -9,7 +9,7 @@ public class BattleUnit {
     public Alignment align { get { return unit.align; } }
     public bool hasActedThisTurn { get; private set; }
 
-    public DollTargetEvent doll {
+    public Doll doll {
         get {
             return battle.controller.GetDollForUnit(this);
         }

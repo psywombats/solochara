@@ -18,14 +18,17 @@ public class BattleController : MonoBehaviour {
 
     // UI hookup
     public SpellSelector spellSelect;
+    public GroupSelector allySelect;
+    public GroupSelector enemySelect;
+    public GroupSelector allSelect;
 
     // internal state
-    private Dictionary<BattleUnit, DollTargetEvent> dolls;
+    private Dictionary<BattleUnit, Doll> dolls;
 
     // === INITIALIZATION ==========================================================================
 
     public BattleController() {
-        dolls = new Dictionary<BattleUnit, DollTargetEvent>();
+        dolls = new Dictionary<BattleUnit, Doll>();
     }
 
     // this should take a battle memory at some point
@@ -36,7 +39,7 @@ public class BattleController : MonoBehaviour {
 
     // === GETTERS AND BOOKKEEPING =================================================================
 
-    public DollTargetEvent GetDollForUnit(BattleUnit unit) {
+    public Doll GetDollForUnit(BattleUnit unit) {
         return dolls[unit];
     }
 
@@ -63,7 +66,7 @@ public class BattleController : MonoBehaviour {
     public IEnumerator SelectSpellsRoutine(Result<List<Spell>> result, BattleUnit hero) {
         List<Spell> queuedSpells = new List<Spell>();
         while (hero.Get(StatTag.AP) > 0) {
-            Result<SpellSelectable> cardResult = new Result<SpellSelectable>();
+            Result<Selectable> cardResult = new Result<Selectable>();
             yield return spellSelect.SelectSpellRoutine(hero, cardResult);
             if (cardResult.canceled) {
                 // canceled the selection

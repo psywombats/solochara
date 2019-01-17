@@ -8,12 +8,12 @@ using System.Collections.Generic;
  */
 public abstract class Intent {
 
-    private Battle battle;
-    private List<BattleUnit> targets;
+    public Battle battle { get; private set; }
+    public BattleUnit actor { get; private set; }
 
-    public Intent(Battle battle, List<BattleUnit> targets) {
+    public Intent(Battle battle, BattleUnit actor) {
+        this.actor = actor;
         this.battle = battle;
-        this.targets = targets;
     }
 
     public abstract IEnumerator ResolveRoutine();
