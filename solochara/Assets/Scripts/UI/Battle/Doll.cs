@@ -33,6 +33,7 @@ public class Doll : Selectable {
     public SpriteRenderer appearance;
     
     public BattleAnimationPlayer player { get; private set; }
+    public BattleUnit unit { get; private set; }
 
     private Vector3 originalDollPos;
     private Type type;
@@ -49,7 +50,13 @@ public class Doll : Selectable {
 
     [MoonSharpHidden]
     public void Populate(BattleUnit unit) {
-        this.appearance.sprite = unit.unit.appearance;
+        this.unit = unit;
+        if (unit != null) {
+            this.appearance.sprite = unit.unit.appearance;
+        } else {
+            this.appearance.sprite = null;
+        }
+        selected = false;
     }
 
     [MoonSharpHidden]

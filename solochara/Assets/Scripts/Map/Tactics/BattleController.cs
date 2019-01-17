@@ -45,9 +45,19 @@ public class BattleController : MonoBehaviour {
 
     // === STATE MACHINE ===========================================================================
 
-    public IEnumerator BattleBeginRoutine() {
-        this.spellSelect.gameObject.SetActive(false);
-        yield break;
+    public IEnumerator StartBattleRoutine() {
+        this.battle.SetUpWithController(this);
+
+        foreach (BattleUnit unit in this.battle.UnitsByAlignment(Alignment.Enemy)) {
+            Doll doll = this.enemySelect.AssignNextDoll(unit);
+            dolls[unit] = doll;
+        }
+        foreach (BattleUnit unit in this.battle.UnitsByAlignment(Alignment.Hero)) {
+            Doll doll = this.allySelect.AssignNextDoll(unit);
+            dolls[unit] = doll;
+        }
+        
+        yield return this.battle.BattleRoutine();
     }
 
     public IEnumerator TurnBeginAnimationRoutine(Alignment align) {
@@ -65,9 +75,10 @@ public class BattleController : MonoBehaviour {
     
     public IEnumerator SelectSpellsRoutine(Result<List<Spell>> result, BattleUnit hero) {
         List<Spell> queuedSpells = new List<Spell>();
+        yield return spellSelect.EnableRoutine(hero.unit.spells);
         while (hero.Get(StatTag.AP) > 0) {
             Result<Selectable> cardResult = new Result<Selectable>();
-            yield return spellSelect.SelectSpellRoutine(hero, cardResult);
+            yield return spellSelect.SelectSpellRoutine(cardResult);
             if (cardResult.canceled) {
                 // canceled the selection
                 if (queuedSpells.Count > 0) {
@@ -98,6 +109,7 @@ public class BattleController : MonoBehaviour {
                 }
             }
         }
+        yield return spellSelect.DisableRoutine();
         result.value = queuedSpells;
     }
 }

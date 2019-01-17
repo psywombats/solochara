@@ -17,18 +17,39 @@ using UnityEngine;
 public class Battle : ScriptableObject {
 
     public AIController ai;
-    public List<BattleUnit> initialUnits;
+    public List<Unit> initialUnits;
 
     public BattleController controller { get; private set; }
-    private List<BattleUnit> units;
-    private Dictionary<Alignment, BattleFaction> factions;
+    private List<BattleUnit> units = new List<BattleUnit>();
+    private Dictionary<Alignment, BattleFaction> factions = new Dictionary<Alignment, BattleFaction>();
 
-    // === INITIALIZATION ==========================================================================
+    // === INITIALIZATION===========================================================================
 
-    public Battle() {
-        this.units = new List<BattleUnit>();
-        this.factions = new Dictionary<Alignment, BattleFaction>();
+    public void SetUpWithController(BattleController controller) {
+        this.controller = controller;
+
+        foreach (Unit baseUnit in this.initialUnits) {
+            Unit unit = baseUnit.unique ? UnitFromKey(baseUnit.name) : Instantiate(baseUnit);
+            AddUnit(new BattleUnit(unit, this));
+        }
+
+        this.ai.ConfigureForBattle(this);
     }
+
+    public void AddUnit(BattleUnit unit) {
+        units.Add(unit);
+        if (!factions.ContainsKey(unit.align)) {
+            factions[unit.align] = new BattleFaction(this, unit.align);
+        }
+    }
+
+    public Unit UnitFromKey(string unitKey) {
+        Unit unit = Global.Instance().Party.LookUpUnit(unitKey);
+        Debug.Assert(unit != null, "Unknown unit key " + unitKey);
+
+        return unit;
+    }
+
 
     // === BOOKKEEPING AND GETTERS =================================================================
 
@@ -39,20 +60,6 @@ public class Battle : ScriptableObject {
     public IEnumerable<BattleUnit> UnitsByAlignment(Alignment align) {
         return units.Where(unit => (unit.align == align));
     }
-
-    public BattleUnit AddUnitFromKey(string unitKey) {
-        Unit unit = Global.Instance().Party.LookUpUnit(unitKey);
-        Debug.Assert(unit != null, "Unknown unit key " + unitKey);
-        BattleUnit battleUnit = new BattleUnit(unit, this);
-        AddUnit(battleUnit);
-
-        if (!factions.ContainsKey(battleUnit.align)) {
-            factions[battleUnit.align] = new BattleFaction(this, battleUnit.align);
-        }
-
-        return battleUnit;
-    }
-
     public List<BattleFaction> GetFactions() {
         return new List<BattleFaction>(factions.Values);
     }
@@ -61,17 +68,10 @@ public class Battle : ScriptableObject {
         return this.factions[align];
     }
 
-    private void AddUnit(BattleUnit unit) {
-        units.Add(unit);
-    }
-
     // === STATE MACHINE ===========================================================================
 
     // runs and executes this battle
-    public IEnumerator BattleRoutine(BattleController controller) {
-        this.controller = controller;
-        this.ai.ConfigureForBattle(this);
-        yield return controller.BattleBeginRoutine();
+    public IEnumerator BattleRoutine() {
         while (true) {
             yield return NextRoundRoutine();
             if (CheckGameOver() != Alignment.None) {
@@ -133,7 +133,7 @@ public class Battle : ScriptableObject {
         }
     }
 
-    private IEnumerator PlayNextHumanActionRoutine() {
+    private IEnumerator PlayHumanTurnRoutine() {
         BattleUnit hero = this.GetFaction(Alignment.Hero).GetUnits().First();
         Result<List<Spell>> spellsResult = new Result<List<Spell>>();
         yield return controller.SelectSpellsRoutine(spellsResult, hero);

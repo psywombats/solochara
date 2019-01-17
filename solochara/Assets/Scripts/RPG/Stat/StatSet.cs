@@ -59,7 +59,9 @@ public class StatSet : ISerializationCallbackReceiver {
 
     public void AddSet(StatSet other) {
         foreach (StatTag tag in Enum.GetValues(typeof(StatTag))) {
-            stats[tag] = Stat.Get(tag).combinator.Combine(stats[tag], other.stats[tag]);
+            if (other.stats.ContainsKey(tag)) {
+                stats[tag] = Stat.Get(tag).combinator.Combine(stats[tag], other.stats[tag]);
+            }
         }
     }
 

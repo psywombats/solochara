@@ -15,7 +15,7 @@ public class Result<T> {
         get {
             Debug.Assert(!canceled, "Accessing canceled result");
             Debug.Assert(finished, "Accessing unset result");
-            return value;
+            return _value;
         }
         set {
             Debug.Assert(!finished, "Can only set result once");

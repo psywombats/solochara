@@ -8,9 +8,11 @@ public class APMeter : MonoBehaviour {
     public GameObject pipPrefab;
     
     public void Populate(Spell spell) {
-        this.transform.DetachChildren();
+        foreach (Transform child in transform) {
+            Destroy(child.gameObject);
+        }
         for (int i = 0; i < spell.apCost; i += 1) {
-            Instantiate(this.pipPrefab).transform.parent = this.transform;
+            Instantiate(this.pipPrefab).transform.SetParent(transform);
         }
     }
 }

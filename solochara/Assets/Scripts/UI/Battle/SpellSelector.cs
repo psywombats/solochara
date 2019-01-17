@@ -12,13 +12,17 @@ public class SpellSelector : MonoBehaviour, InputListener {
     private Result<Selectable> awaitingResult;
     private int selectionIndex = 0;
 
+    public void Start() {
+        DestroyCards();
+    }
+
     public bool OnCommand(InputManager.Command command, InputManager.Event eventType) {
         if (eventType == InputManager.Event.Down) {
             switch (command) {
                 case InputManager.Command.Cancel:
                     awaitingResult.Cancel();
                     break;
-                case InputManager.Command.Click:
+                case InputManager.Command.Confirm:
                     awaitingResult.value = GetSelectedCard();
                     break;
                 case InputManager.Command.Down:
@@ -32,38 +36,33 @@ public class SpellSelector : MonoBehaviour, InputListener {
         return true;
     }
 
-    public IEnumerator EnableRoutine() {
-        attachmentPoint.SetActive(true);
+    public IEnumerator EnableRoutine(List<Spell> spells) {
+        DestroyCards();
+        selectionIndex = 0;
+        foreach (Spell spell in spells) {
+            SpellCard card = Instantiate(this.spellCardPrefab).GetComponent<SpellCard>();
+            card.transform.SetParent(attachmentPoint.transform);
+            card.Populate(spell);
+        }
+        Instantiate(this.dummyCardPrefab).transform.SetParent(attachmentPoint.transform);
         Global.Instance().Input.PushListener(this);
-        yield break;
+        yield return null;
     }
 
     public IEnumerator DisableRoutine() {
-        attachmentPoint.SetActive(false);
         Global.Instance().Input.RemoveListener(this);
-        yield break;
+        yield return null;
     }
 
-    public IEnumerator SelectSpellRoutine(BattleUnit hero, Result<Selectable> result) {
-        Populate(hero.unit.spells);
+    public IEnumerator SelectSpellRoutine(Result<Selectable> result) {
+        GetSelectedCard().selected = true;
         this.awaitingResult = result;
         while (!awaitingResult.finished) {
             yield return null;
         }
         awaitingResult = null;
     }
-
-
-    private void Populate(List<Spell> spells) {
-        attachmentPoint.transform.DetachChildren();
-        foreach (Spell spell in spells) {
-            SpellCard card = Instantiate(this.spellCardPrefab).GetComponent<SpellCard>();
-            card.transform.parent = attachmentPoint.transform;
-            card.Populate(spell);
-        }
-        Instantiate(this.dummyCardPrefab).transform.parent = this.transform;
-    }
-
+    
     private Selectable GetSelectedCard() {
         return GetCardAt(selectionIndex);
     }
@@ -84,5 +83,11 @@ public class SpellSelector : MonoBehaviour, InputListener {
             selectionIndex = 0;
         }
         GetSelectedCard().selected = true;
+    }
+
+    private void DestroyCards() {
+        foreach (Transform child in attachmentPoint.transform) {
+            Destroy(child.gameObject);
+        }
     }
 }

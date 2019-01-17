@@ -11,8 +11,12 @@ public class Selectable : MonoBehaviour {
         get { return _selected; }
         set {
             _selected = value;
-            unselectedBacker.SetActive(!_selected);
-            selectedBacker.SetActive(_selected);
+            if (unselectedBacker != null) {
+                unselectedBacker.SetActive(!_selected);
+            }
+            if (selectedBacker != null) {
+                selectedBacker.SetActive(_selected);
+            }
         }
     }
 }

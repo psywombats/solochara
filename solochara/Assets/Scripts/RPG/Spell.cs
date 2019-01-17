@@ -11,7 +11,7 @@ public class Spell : ScriptableObject {
     public TargetType targets;
 
     public IEnumerator ResolveRoutine(Intent intent) {
-
+        yield break;
     }
 
     public IEnumerator AcquireTargetsRoutine(Result<List<BattleUnit>> result, Intent intent) {
