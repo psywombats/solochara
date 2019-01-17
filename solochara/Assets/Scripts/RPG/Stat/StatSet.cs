@@ -46,8 +46,16 @@ public class StatSet : ISerializationCallbackReceiver {
         get { return stats[tag]; }
         set { stats[tag] = value; }
     }
+    
+    // === OPERATIONS ===
 
-    // === SET OPERATIONS ===
+    public void Add(StatTag tag, float value) {
+        stats[tag] += value;
+    }
+
+    public void Sub(StatTag tag, float value) {
+        Add(tag, -value);
+    }
 
     public void AddSet(StatSet other) {
         foreach (StatTag tag in Enum.GetValues(typeof(StatTag))) {

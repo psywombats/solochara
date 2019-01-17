@@ -16,6 +16,9 @@ public class BattleController : MonoBehaviour {
     // properties required upon initializion
     public Battle battle;
 
+    // UI hookup
+    public SpellSelector spellSelect;
+
     // internal state
     private Dictionary<BattleUnit, DollTargetEvent> dolls;
 
@@ -39,6 +42,11 @@ public class BattleController : MonoBehaviour {
 
     // === STATE MACHINE ===========================================================================
 
+    public IEnumerator BattleBeginRoutine() {
+        this.spellSelect.gameObject.SetActive(false);
+        yield break;
+    }
+
     public IEnumerator TurnBeginAnimationRoutine(Alignment align) {
         yield break;
     }
@@ -52,7 +60,41 @@ public class BattleController : MonoBehaviour {
         yield return CoUtils.RunParallel(routinesToRun.ToArray(), this);
     }
     
-    public IEnumerator PlayNextHumanActionRoutine() {
-        yield return null;
+    public IEnumerator SelectSpellsRoutine(Result<List<Spell>> result, BattleUnit hero) {
+        List<Spell> queuedSpells = new List<Spell>();
+        while (hero.Get(StatTag.AP) > 0) {
+            Result<SpellSelectable> cardResult = new Result<SpellSelectable>();
+            yield return spellSelect.SelectSpellRoutine(hero, cardResult);
+            if (cardResult.canceled) {
+                // canceled the selection
+                if (queuedSpells.Count > 0) {
+                    Global.Instance().Audio.PlaySFX("cancel");
+                    Spell canceled = queuedSpells.Last();
+                    hero.unit.stats.Add(StatTag.AP, canceled.apCost);
+                    queuedSpells.RemoveAt(queuedSpells.Count - 1);
+                } else {
+                    Global.Instance().Audio.PlaySFX("error");
+                }
+            } else if (cardResult.value.GetComponent<SpellCard>()) {
+                // selected a spell
+                Spell spell = cardResult.value.GetComponent<SpellCard>().spell;
+                if (hero.Get(StatTag.AP) >= spell.apCost) {
+                    Global.Instance().Audio.PlaySFX("confirm");
+                    queuedSpells.Add(spell);
+                    hero.unit.stats.Sub(StatTag.AP, spell.apCost);
+                } else {
+                    Global.Instance().Audio.PlaySFX("error");
+                }
+            } else {
+                // selected the go ahead
+                if (queuedSpells.Count > 0) {
+                    Global.Instance().Audio.PlaySFX("confirm");
+                    break;
+                } else {
+                    Global.Instance().Audio.PlaySFX("error");
+                }
+            }
+        }
+        result.value = queuedSpells;
     }
 }

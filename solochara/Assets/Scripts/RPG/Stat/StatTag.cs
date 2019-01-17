@@ -6,6 +6,7 @@ public enum StatTag {
     MHP,
     HP,
 
+    MAP,
     AP,
 
     MAG,

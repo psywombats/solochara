@@ -71,6 +71,7 @@ public class Battle : ScriptableObject {
     public IEnumerator BattleRoutine(BattleController controller) {
         this.controller = controller;
         this.ai.ConfigureForBattle(this);
+        yield return controller.BattleBeginRoutine();
         while (true) {
             yield return NextRoundRoutine();
             if (CheckGameOver() != Alignment.None) {
@@ -121,7 +122,7 @@ public class Battle : ScriptableObject {
     private IEnumerator PlayNextActionRoutine(Alignment align) {
         switch (align) {
             case Alignment.Hero:
-                yield return controller.PlayNextHumanActionRoutine();
+                yield return PlayHumanTurnRoutine();
                 break;
             case Alignment.Enemy:
                 yield return ai.PlayNextAIActionRoutine();
@@ -130,5 +131,13 @@ public class Battle : ScriptableObject {
                 Debug.Assert(false, "bad align " + align);
                 yield break;
         }
+    }
+
+    private IEnumerator PlayNextHumanActionRoutine() {
+        BattleUnit hero = this.GetFaction(Alignment.Hero).GetUnits().First();
+        Result<List<Spell>> spellsResult = new Result<List<Spell>>();
+        yield return controller.SelectSpellsRoutine(spellsResult, hero);
+
+        foreach (Spell spell)
     }
 }

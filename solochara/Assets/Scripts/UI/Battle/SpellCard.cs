@@ -2,24 +2,15 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class SpellCard : MonoBehaviour {
+public class SpellCard : SpellSelectable {
 
     public Text skillName;
     public APMeter apMeter;
-    public GameObject unselectedBacker;
-    public GameObject selectedBacker;
 
-    private bool _selected;
-    public bool selected {
-        get { return _selected; }
-        private set {
-            _selected = value;
-            unselectedBacker.SetActive(!_selected);
-            selectedBacker.SetActive(_selected);
-        }
-    }
+    public Spell spell { get; private set; }
 
     public void Populate(Spell spell) {
+        this.spell = spell;
         skillName.text = spell.spellName;
         apMeter.Populate(spell);
         selected = false;

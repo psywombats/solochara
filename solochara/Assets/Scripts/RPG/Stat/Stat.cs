@@ -36,8 +36,9 @@ public class Stat {
 
     private static void InitializeStats() {
         stats = new Dictionary<StatTag, Stat>();
-        AddStat(StatTag.MHP,            CombinationAdditive.Instance(), "MHP");
+        AddStat(StatTag.MHP,            CombinationAdditive.Instance(), "Max HP");
         AddStat(StatTag.HP,             CombinationAdditive.Instance(), "HP");
+        AddStat(StatTag.MAP,            CombinationAdditive.Instance(), "Max AP");
         AddStat(StatTag.AP,             CombinationAdditive.Instance(), "AP");
         AddStat(StatTag.MAG,            CombinationAdditive.Instance(), "MAG");
         AddStat(StatTag.DEF,            CombinationAdditive.Instance(), "DEF");

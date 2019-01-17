@@ -8,7 +8,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <ProjectGuid>{1D6416A7-B19C-4CF6-BCC0-62F3A1ECF086}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -109,6 +110,7 @@
     <Compile Include="Assets\Scripts\RPG\BattleFaction.cs" />
     <Compile Include="Assets\Scripts\RPG\BattleUnit.cs" />
     <Compile Include="Assets\Scripts\RPG\Data\RPGMemory.cs" />
+    <Compile Include="Assets\Scripts\RPG\Intent.cs" />
     <Compile Include="Assets\Scripts\RPG\PartyManager.cs" />
     <Compile Include="Assets\Scripts\RPG\Spell.cs" />
     <Compile Include="Assets\Scripts\RPG\Stat\CombinationAdditive.cs" />
@@ -130,6 +132,7 @@
     <Compile Include="Assets\Scripts\Serialization\TachiMemory.cs" />
     <Compile Include="Assets\Scripts\UI\Battle\APMeter.cs" />
     <Compile Include="Assets\Scripts\UI\Battle\SpellCard.cs" />
+    <Compile Include="Assets\Scripts\UI\Battle\SpellSelectable.cs" />
     <Compile Include="Assets\Scripts\UI\Battle\SpellSelector.cs" />
     <Compile Include="Assets\Scripts\UI\UIEngine.cs" />
     <Compile Include="Assets\Scripts\UI\UISprite.cs" />
