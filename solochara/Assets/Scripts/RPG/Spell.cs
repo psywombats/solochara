@@ -109,6 +109,9 @@ public class Spell : ScriptableObject {
                 living.Add(unit);
             }
         }
+        if (living.Count == 0) {
+            return living;
+        }
         return new List<BattleUnit>() { RandomUtils.RandomItem(intent.battle.r, living) };
     }
 
