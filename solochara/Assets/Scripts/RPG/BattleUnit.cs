@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 // representation of a unit in battle
 public class BattleUnit {
@@ -35,6 +36,29 @@ public class BattleUnit {
     // called at the beginning of this unit's faction's turn
     public void ResetForNewTurn() {
         hasActedThisTurn = false;
+        unit.stats.Set(StatTag.AP, Get(StatTag.MAP));
+    }
+
+    public IEnumerator TakeDamageRoutine(int damage) {
+        battle.Log(this + " took " + damage + " damages");
+        unit.stats.Sub(StatTag.HP, damage);
+        if (IsDead()) {
+            yield return DeathRoutine();
+        }
+    }
+
+    public IEnumerator HealRoutine(int heal) {
+        int effectiveHeal = (int) Mathf.Min(heal, Get(StatTag.MHP) - Get(StatTag.HP));
+        battle.Log(this + " healed for " + heal);
+        unit.stats.Add(StatTag.HP, effectiveHeal);
+        yield return null;
+    }
+
+    public IEnumerator DeathRoutine() {
+        // ??? todo I guess
+        battle.Log(this + " died");
+        doll.appearance.sprite = null;
+        yield return null;
     }
 
     // === RPG =====================================================================================
@@ -50,5 +74,11 @@ public class BattleUnit {
     // checks for deadness and dead-like conditions like petrification
     public bool IsDead() {
         return unit.stats.Get(StatTag.HP) <= 0;
+    }
+
+    // === MISC ====================================================================================
+
+    public override string ToString() {
+        return unit.ToString();
     }
 }

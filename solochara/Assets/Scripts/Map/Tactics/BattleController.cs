@@ -21,6 +21,7 @@ public class BattleController : MonoBehaviour {
     public GroupSelector allySelect;
     public GroupSelector enemySelect;
     public GroupSelector allSelect;
+    public BattleAnimationPlayer animator;
 
     // internal state
     private Dictionary<BattleUnit, Doll> dolls;

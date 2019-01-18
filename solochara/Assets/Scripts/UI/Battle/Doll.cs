@@ -63,15 +63,19 @@ public class Doll : Selectable {
     public void PrepareForAnimation(BattleAnimationPlayer player, Type type) {
         this.player = player;
         this.type = type;
-        animator.PrepareForAnimation();
+        if (animator != null) {
+            animator.PrepareForAnimation();
+        }
         originalDollPos = transform.position;
     }
 
     [MoonSharpHidden]
     public void ResetAfterAnimation() {
-        animator.ResetAfterAnimation();
+        if (animator != null) {
+            animator.ResetAfterAnimation();
+        }
         transform.position = originalDollPos;
-        GetComponent<AfterimageComponent>().enabled = false;
+        // GetComponent<AfterimageComponent>().enabled = false;
     }
 
     // === COMMAND HELPERS =========================================================================
@@ -240,7 +244,7 @@ public class Doll : Selectable {
     private IEnumerator cs_strike(DynValue args) {
         float elapsed = 0.0f;
         float duration = FloatArg(args, ArgDuration, 0.4f);
-        float power = FloatArg(args, ArgPower, 0.1f);
+        float power = FloatArg(args, ArgPower, 16f);
         Vector3 startPos = transform.localPosition;
         while (elapsed < duration) {
             elapsed += Time.deltaTime;
@@ -256,18 +260,16 @@ public class Doll : Selectable {
     // tint({r, g, b, duration?, speed?})
     public void tint(DynValue args) { CSRun(cs_tint(args), args); }
     private IEnumerator cs_tint(DynValue args) {
-        SpriteRenderer renderer = GetComponent<SpriteRenderer>();
         yield return ColorRoutine(args, 1.0f, () => {
-            return renderer.color;
+            return appearance.color;
         }, (Color c) => {
-            renderer.color = c;
+            appearance.color = c;
         });
     }
 
     // flash({r, g, b, duration?, speed?, power?})
     public void flash(DynValue args) { CSRun(cs_flash(args), args); }
     private IEnumerator cs_flash(DynValue args) {
-        SpriteRenderer renderer = GetComponent<SpriteRenderer>();
         float r = (float)args.Table.Get(ArgRed).Number;
         float g = (float)args.Table.Get(ArgGreen).Number;
         float b = (float)args.Table.Get(ArgBlue).Number;
@@ -276,7 +278,7 @@ public class Doll : Selectable {
             return color;
         }, (Color c) => {
             color = c;
-            renderer.material.SetColor("_Flash", c);
+            appearance.material.SetColor("_Flash", c);
         });
     }
 }

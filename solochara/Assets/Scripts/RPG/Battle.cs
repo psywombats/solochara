@@ -20,6 +20,7 @@ public class Battle : ScriptableObject {
     public List<Unit> initialUnits;
 
     public BattleController controller { get; private set; }
+    public System.Random r { get; private set; }
     private List<BattleUnit> units = new List<BattleUnit>();
     private Dictionary<Alignment, BattleFaction> factions = new Dictionary<Alignment, BattleFaction>();
 
@@ -27,6 +28,7 @@ public class Battle : ScriptableObject {
 
     public void SetUpWithController(BattleController controller) {
         this.controller = controller;
+        this.r = new System.Random();
 
         foreach (Unit baseUnit in this.initialUnits) {
             Unit unit = baseUnit.unique ? UnitFromKey(baseUnit.name) : Instantiate(baseUnit);
@@ -139,7 +141,14 @@ public class Battle : ScriptableObject {
         yield return controller.SelectSpellsRoutine(intentsResult, hero);
         
         foreach (Intent intent in intentsResult.value) {
+            yield return CoUtils.Wait(0.8f);
             yield return intent.ResolveRoutine();
         }
+    }
+
+    // === MISC ====================================================================================
+
+    public void Log(string message) {
+        Global.Instance().UIEngine.DebugBox.text = message;
     }
 }

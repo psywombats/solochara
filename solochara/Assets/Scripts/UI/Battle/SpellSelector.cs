@@ -50,6 +50,7 @@ public class SpellSelector : MonoBehaviour, InputListener {
     }
 
     public IEnumerator DisableRoutine() {
+        DestroyCards();
         Global.Instance().Input.RemoveListener(this);
         yield return null;
     }

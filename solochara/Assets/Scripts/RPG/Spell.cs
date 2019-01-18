@@ -8,11 +8,12 @@ public class Spell : ScriptableObject {
 
     public string spellName;
     public int apCost;
+    public BattleAnimation animation;
     public TargetType targets;
     public Warhead warhead;
 
     public IEnumerator ResolveRoutine(Intent intent) {
-        yield break;
+        yield return warhead.ResolveRoutine((IntentSpell) intent);
     }
 
     public IEnumerator AcquireTargetsRoutine(Result<List<BattleUnit>> result, Intent intent) {

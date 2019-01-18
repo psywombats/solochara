@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class IntentSpell : Intent {
 
-    private Spell spell;
-    private List<BattleUnit> targets;
+    public Spell spell { get; private set; }
+    public List<BattleUnit> targets { get; private set; }
 
     public IntentSpell(Battle battle, BattleUnit actor, Spell spell) : base(battle, actor) {
         this.spell = spell;

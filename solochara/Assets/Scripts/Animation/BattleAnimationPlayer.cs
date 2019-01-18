@@ -22,6 +22,13 @@ public class BattleAnimationPlayer : MonoBehaviour {
         Global.Instance().Lua.SetGlobal("defender", defender);
     }
 
+    public IEnumerator PlayAnimationRoutine(BattleAnimation anim, Doll attacker, Doll defender) {
+        this.attacker = attacker;
+        this.defender = defender;
+        SetUpLua();
+        yield return PlayAnimationRoutine(anim);
+    }
+
     public IEnumerator PlayAnimationRoutine(BattleAnimation anim) {
         this.anim = anim;
         yield return PlayAnimationRoutine();

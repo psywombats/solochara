@@ -39,8 +39,9 @@ public class GroupSelector : MonoBehaviour, InputListener {
     public bool OnCommand(InputManager.Command command, InputManager.Event eventType) {
         if (eventType == InputManager.Event.Down) {
             if (awaitingConfirm) {
-                if (command == InputManager.Command.Click) {
-
+                if (command == InputManager.Command.Confirm) {
+                    Global.Instance().Audio.PlaySFX("confirm");
+                    awaitingConfirm = false;
                 }
             } else {
                 switch (command) {
@@ -81,7 +82,7 @@ public class GroupSelector : MonoBehaviour, InputListener {
         while (awaitingConfirm) {
             yield return null;
         }
-        StartMulti();
+        EndMulti(result);
     }
 
     public IEnumerator SelectAllExceptRoutine(Result<List<BattleUnit>> result, Intent intent) {
@@ -120,9 +121,11 @@ public class GroupSelector : MonoBehaviour, InputListener {
         Global.Instance().Input.PushListener(this);
     }
 
-    private void EndMulti() {
+    private void EndMulti(Result<List<BattleUnit>> result) {
+        result.value = new List<BattleUnit>();
         foreach (Doll doll in dolls) {
             doll.selected = false;
+            result.value.Add(doll.unit);
         }
         Global.Instance().Input.RemoveListener(this);
     }

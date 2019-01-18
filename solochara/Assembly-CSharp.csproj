@@ -156,7 +156,7 @@
     <None Include="Assets\Resources\Shaders\GlitchGeometryShader.shader" />
     <None Include="Assets\Tiled2Unity\Tiled2Unity.export.txt" />
     <None Include="Assets\Resources\Shaders\DiffuseDepthSprite.shader" />
-    <None Include="Assets\Resources\Shaders\GlitchSpriteShader.shader" />
+    <None Include="Assets\Resources\Shaders\SpriteEffectsShader.shader" />
     <None Include="Assets\Tiled2Unity\License.txt" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/aking_2/solochara/solochara/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>

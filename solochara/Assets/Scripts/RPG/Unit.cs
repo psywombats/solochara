@@ -11,4 +11,8 @@ public class Unit : ScriptableObject {
     public Alignment align;
     public List<Spell> spells;
     public StatSet stats;
+
+    public override string ToString() {
+        return unitName + " (" + stats.Get(StatTag.HP) + " / " + stats.Get(StatTag.MHP) + ")";
+    }
 }
