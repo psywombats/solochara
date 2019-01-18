@@ -10,7 +10,7 @@ public class FontImporter : AssetPostprocessor {
     private const int FontSize = 8;
 
     public void OnPreprocessTexture() {
-        if (!assetPath.ToLower().Contains("bitmapfont")) {
+        if (!assetPath.ToLower().Contains("bitmapfont_staging")) {
             return;
         }
 
@@ -23,7 +23,7 @@ public class FontImporter : AssetPostprocessor {
     }
 
     public void OnPostprocessTexture(Texture2D texture) {
-        if (!assetPath.ToLower().Contains("bitmapfont")) {
+        if (!assetPath.ToLower().Contains("bitmapfont_staging")) {
             return;
         }
 
