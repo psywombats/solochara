@@ -17,9 +17,14 @@ public class IntentSpell : Intent {
         }
     }
 
-    public IEnumerator AcquireTargetsRoutine() {
-        Result<List<BattleUnit>> result = new Result<List<BattleUnit>>();
+    public override int APCost() {
+        return spell.apCost;
+    }
+
+    public IEnumerator AcquireTargetsRoutine(Result<List<BattleUnit>> result) {
         yield return spell.AcquireTargetsRoutine(result, this);
-        targets = result.value;
+        if (!result.canceled) {
+            targets = result.value;
+        }
     }
 }

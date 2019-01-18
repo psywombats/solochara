@@ -46,9 +46,11 @@ public class GroupSelector : MonoBehaviour, InputListener {
                 switch (command) {
                     case InputManager.Command.Cancel:
                         awaitingResult.Cancel();
+                        Global.Instance().Audio.PlaySFX("cancel");
                         break;
                     case InputManager.Command.Confirm:
                         awaitingResult.value = GetSelectedDoll().unit;
+                        Global.Instance().Audio.PlaySFX("confirm");
                         break;
                     case InputManager.Command.Down:
                         MoveSelection(1);

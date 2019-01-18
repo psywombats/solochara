@@ -17,4 +17,6 @@ public abstract class Intent {
     }
 
     public abstract IEnumerator ResolveRoutine();
+
+    public abstract int APCost();
 }

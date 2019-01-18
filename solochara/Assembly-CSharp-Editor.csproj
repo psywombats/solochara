@@ -67,8 +67,10 @@
     <Compile Include="Assets\Editor\FontImporter.cs" />
     <Compile Include="Assets\Editor\InstanceMultiControllerEditor.cs" />
     <Compile Include="Assets\Editor\MapCameraEditor.cs" />
+    <Compile Include="Assets\Editor\SpellEditor.cs" />
     <Compile Include="Assets\Editor\SpriteImporter.cs" />
     <Compile Include="Assets\Editor\StatSetDrawer.cs" />
+    <Compile Include="Assets\Editor\WarheadDrawer.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/aking_2/solochara/solochara/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>

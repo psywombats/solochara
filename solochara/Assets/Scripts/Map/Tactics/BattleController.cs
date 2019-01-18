@@ -73,19 +73,19 @@ public class BattleController : MonoBehaviour {
         yield return CoUtils.RunParallel(routinesToRun.ToArray(), this);
     }
     
-    public IEnumerator SelectSpellsRoutine(Result<List<Spell>> result, BattleUnit hero) {
-        List<Spell> queuedSpells = new List<Spell>();
+    public IEnumerator SelectSpellsRoutine(Result<List<Intent>> result, BattleUnit hero) {
+        List<Intent> queuedIntents = new List<Intent>();
         yield return spellSelect.EnableRoutine(hero.unit.spells);
         while (hero.Get(StatTag.AP) > 0) {
             Result<Selectable> cardResult = new Result<Selectable>();
             yield return spellSelect.SelectSpellRoutine(cardResult);
             if (cardResult.canceled) {
                 // canceled the selection
-                if (queuedSpells.Count > 0) {
+                if (queuedIntents.Count > 0) {
                     Global.Instance().Audio.PlaySFX("cancel");
-                    Spell canceled = queuedSpells.Last();
-                    hero.unit.stats.Add(StatTag.AP, canceled.apCost);
-                    queuedSpells.RemoveAt(queuedSpells.Count - 1);
+                    Intent canceled = queuedIntents.Last();
+                    hero.unit.stats.Add(StatTag.AP, canceled.APCost());
+                    queuedIntents.RemoveAt(queuedIntents.Count - 1);
                 } else {
                     Global.Instance().Audio.PlaySFX("error");
                 }
@@ -94,14 +94,22 @@ public class BattleController : MonoBehaviour {
                 Spell spell = cardResult.value.GetComponent<SpellCard>().spell;
                 if (hero.Get(StatTag.AP) >= spell.apCost) {
                     Global.Instance().Audio.PlaySFX("confirm");
-                    queuedSpells.Add(spell);
                     hero.unit.stats.Sub(StatTag.AP, spell.apCost);
+                    // find a target for the spell
+                    Result<List<BattleUnit>> targetsResult = new Result<List<BattleUnit>>();
+                    IntentSpell intent = new IntentSpell(this.battle, hero, spell);
+                    yield return intent.AcquireTargetsRoutine(targetsResult);
+                    if (!targetsResult.canceled) {
+                        queuedIntents.Add(intent);
+                    } else {
+                        hero.unit.stats.Add(StatTag.AP, spell.apCost);
+                    }
                 } else {
                     Global.Instance().Audio.PlaySFX("error");
                 }
             } else {
                 // selected the go ahead
-                if (queuedSpells.Count > 0) {
+                if (queuedIntents.Count > 0) {
                     Global.Instance().Audio.PlaySFX("confirm");
                     break;
                 } else {
@@ -110,6 +118,6 @@ public class BattleController : MonoBehaviour {
             }
         }
         yield return spellSelect.DisableRoutine();
-        result.value = queuedSpells;
+        result.value = queuedIntents;
     }
 }

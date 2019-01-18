@@ -9,6 +9,7 @@ public class Spell : ScriptableObject {
     public string spellName;
     public int apCost;
     public TargetType targets;
+    public Warhead warhead;
 
     public IEnumerator ResolveRoutine(Intent intent) {
         yield break;

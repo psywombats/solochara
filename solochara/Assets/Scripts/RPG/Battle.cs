@@ -135,9 +135,11 @@ public class Battle : ScriptableObject {
 
     private IEnumerator PlayHumanTurnRoutine() {
         BattleUnit hero = this.GetFaction(Alignment.Hero).GetUnits().First();
-        Result<List<Spell>> spellsResult = new Result<List<Spell>>();
-        yield return controller.SelectSpellsRoutine(spellsResult, hero);
-
+        Result<List<Intent>> intentsResult = new Result<List<Intent>>();
+        yield return controller.SelectSpellsRoutine(intentsResult, hero);
         
+        foreach (Intent intent in intentsResult.value) {
+            yield return intent.ResolveRoutine();
+        }
     }
 }
