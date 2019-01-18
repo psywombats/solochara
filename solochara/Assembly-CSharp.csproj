@@ -150,6 +150,7 @@
     <Compile Include="Assets\Scripts\Util\IntVector2.cs" />
     <Compile Include="Assets\Scripts\Util\IntVector3.cs" />
     <Compile Include="Assets\Scripts\Util\ObjectPool.cs" />
+    <Compile Include="Assets\Scripts\Util\RandomUtils.cs" />
     <Compile Include="Assets\Scripts\Util\Result.cs" />
     <Compile Include="Assets\Scripts\Util\SerialDictionary.cs" />
     <Compile Include="Assets\Scripts\Util\UIUtils.cs" />

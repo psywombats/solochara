@@ -13,6 +13,8 @@ public class IntentSpell : Intent {
 
     public override IEnumerator ResolveRoutine() {
         if (!this.actor.IsDead()) {
+            battle.Log(actor + " uses " + spell.spellName);
+            yield return CoUtils.Wait(0.5f);
             yield return spell.ResolveRoutine(this);
         }
     }
@@ -26,5 +28,9 @@ public class IntentSpell : Intent {
         if (!result.canceled) {
             targets = result.value;
         }
+    }
+
+    public void AcquireAITargets() {
+        targets = spell.AcquireAITargets(this);
     }
 }

@@ -144,6 +144,8 @@ public class Battle : ScriptableObject {
             yield return CoUtils.Wait(0.8f);
             yield return intent.ResolveRoutine();
         }
+
+        hero.MarkActionTaken();
     }
 
     // === MISC ====================================================================================

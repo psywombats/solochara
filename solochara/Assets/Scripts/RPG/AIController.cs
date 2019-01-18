@@ -22,7 +22,10 @@ public class AIController : ScriptableObject {
     public IEnumerator PlayNextAIActionRoutine() {
         BattleUnit actor = battle.GetFaction(Alignment.Enemy).NextMoveableUnit();
 
-        // TODO: the ai
+        Spell spell = RandomUtils.RandomItem(battle.r, actor.unit.spells);
+        IntentSpell intent = new IntentSpell(battle, actor, spell);
+        intent.AcquireAITargets();
+        yield return intent.ResolveRoutine();
 
         actor.MarkActionTaken();
         yield return null;

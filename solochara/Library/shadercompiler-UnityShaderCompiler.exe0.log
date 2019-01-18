@@ -328,3 +328,7 @@ Cmd: compileSnippet
 Cmd: preprocess
   insize=2110 outsize=1101 ok=1
 Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler

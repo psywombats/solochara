@@ -57,7 +57,61 @@ public class Spell : ScriptableObject {
                 break;
         }
     }
+
+    public List<BattleUnit> AcquireAITargets(IntentSpell intent) {
+        switch (targets) {
+            case TargetType.All:
+                return intent.battle.AllUnits().ToList();
+            case TargetType.AllAllies:
+                return GetAllies(intent);
+            case TargetType.AllEnemies:
+                return GetEnemies(intent);
+            case TargetType.AllNotSelf:
+                return Without(intent.battle.AllUnits().ToList(), intent.actor);
+            case TargetType.Ally:
+                return RandomLiving(intent, GetAllies(intent));
+            case TargetType.AllyNotSelf:
+                return RandomLiving(intent, Without(GetAllies(intent), intent.actor));  case TargetType.Anyone:
+            case TargetType.Enemy:
+            case TargetType.AnyoneNotSelf:
+                return RandomLiving(intent, GetEnemies(intent));
+            case TargetType.Self:
+                return new List<BattleUnit> { intent.actor };
+            default:
+                return null;
+        }
+    }
     
+    private List<BattleUnit> GetAllies(IntentSpell intent) {
+        return intent.battle.UnitsByAlignment(intent.actor.align).ToList();
+    }
+
+    private List<BattleUnit> GetEnemies(IntentSpell intent) {
+        List<BattleUnit> result = new List<BattleUnit>();
+        foreach (BattleFaction faction in intent.battle.GetFactions()) {
+            if (!faction.GetUnits().Contains(intent.actor)) {
+                result.AddRange(faction.GetUnits());
+            }
+        }
+        return result;
+    }
+
+    private List<BattleUnit> Without(List<BattleUnit> units, BattleUnit toExclude) {
+        List<BattleUnit> newUnits = new List<BattleUnit>(units);
+        newUnits.Remove(toExclude);
+        return newUnits;
+    }
+
+    private List<BattleUnit> RandomLiving(Intent intent, List<BattleUnit> units) {
+        List<BattleUnit> living = new List<BattleUnit>();
+        foreach (BattleUnit unit in units) {
+            if (!unit.IsDead()) {
+                living.Add(unit);
+            }
+        }
+        return new List<BattleUnit>() { RandomUtils.RandomItem(intent.battle.r, living) };
+    }
+
     private void CopyUnitResult(Result<List<BattleUnit>> target, Result<BattleUnit> source) {
         if (source.canceled) {
             target.Cancel();
