@@ -91,9 +91,9 @@ public class GroupSelector : MonoBehaviour, InputListener {
 
     public IEnumerator SelectSpecificallyRoutine(Intent intent) {
         StartSingle(null);
-        GetSelectedDoll().selected = false;
+        GetSelectedDoll().GetComponent<Selectable>().selected = false;
         for (int i = selectionIndex; GetSelectedDoll().unit != intent.actor; i += 1) ;
-        GetSelectedDoll().selected = true;
+        GetSelectedDoll().GetComponent<Selectable>().selected = true;
         while (awaitingConfirm) {
             yield return null;
         }
@@ -103,20 +103,20 @@ public class GroupSelector : MonoBehaviour, InputListener {
     private void StartSingle(Result<BattleUnit> result) {
         awaitingResult = result;
         selectionIndex = 0;
-        GetSelectedDoll().selected = true;
+        GetSelectedDoll().GetComponent<Selectable>().selected = true;
         Global.Instance().Input.PushListener(this);
     }
 
     private void EndSingle() {
         awaitingResult = null;
-        GetSelectedDoll().selected = false;
+        GetSelectedDoll().GetComponent<Selectable>().selected = false;
         Global.Instance().Input.RemoveListener(this);
     }
 
     private void StartMulti() {
         awaitingConfirm = true;
         foreach (Doll doll in dolls) {
-            doll.selected = true;
+            doll.GetComponent<Selectable>().selected = true;
         }
         Global.Instance().Input.PushListener(this);
     }
@@ -124,7 +124,7 @@ public class GroupSelector : MonoBehaviour, InputListener {
     private void EndMulti(Result<List<BattleUnit>> result) {
         result.value = new List<BattleUnit>();
         foreach (Doll doll in dolls) {
-            doll.selected = false;
+            doll.GetComponent<Selectable>().selected = false;
             result.value.Add(doll.unit);
         }
         Global.Instance().Input.RemoveListener(this);
@@ -136,7 +136,7 @@ public class GroupSelector : MonoBehaviour, InputListener {
 
     private void MoveSelection(int delta) {
         Doll oldSelected = GetSelectedDoll();
-        oldSelected.selected = false;
+        oldSelected.GetComponent<Selectable>().selected = false;
 
         selectionIndex += delta;
         int max = dolls.Count;
@@ -147,7 +147,7 @@ public class GroupSelector : MonoBehaviour, InputListener {
         }
 
         Doll newSelected = GetSelectedDoll();
-        newSelected.selected = true;
+        newSelected.GetComponent<Selectable>().selected = true;
 
         if (oldSelected != newSelected) {
             Global.Instance().Audio.PlaySFX("cursor");

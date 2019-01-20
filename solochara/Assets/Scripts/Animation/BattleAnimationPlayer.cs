@@ -36,8 +36,8 @@ public class BattleAnimationPlayer : MonoBehaviour {
 
     public IEnumerator PlayAnimationRoutine() {
         SetUpLua();
-        attacker.PrepareForAnimation(this, Doll.Type.Attacker);
-        defender.PrepareForAnimation(this, Doll.Type.Defender);
+        attacker.PrepareForBattleAnimation(this, Doll.Type.Attacker);
+        defender.PrepareForBattleAnimation(this, Doll.Type.Defender);
         isPlayingAnimation = true;
         yield return anim.ToScript().RunRoutine();
         attacker.ResetAfterAnimation();
