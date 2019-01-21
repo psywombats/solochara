@@ -14,9 +14,9 @@ public class AnimationPlayer : MonoBehaviour {
 
     public virtual IEnumerator PlayAnimationRoutine() {
         isPlayingAnimation = true;
-        Global.Instance().Lua.SetGlobal("target", target);
         LuaScript script = anim.ToScript();
-        script.function.
+        script.SetGlobal("target", target);
+        yield return script.RunRoutine();
         isPlayingAnimation = false;
     }
 

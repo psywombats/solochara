@@ -92,7 +92,8 @@
     <Compile Include="Assets\Scripts\IO\InputListener.cs" />
     <Compile Include="Assets\Scripts\IO\InputManager.cs" />
     <Compile Include="Assets\Scripts\Lua\LuaCondition.cs" />
-    <Compile Include="Assets\Scripts\Lua\LuaCutsceneScript.cs" />
+    <Compile Include="Assets\Scripts\Lua\LuaContext.cs" />
+    <Compile Include="Assets\Scripts\Lua\LuaCutsceneContext.cs" />
     <Compile Include="Assets\Scripts\Lua\LuaMapEvent.cs" />
     <Compile Include="Assets\Scripts\Lua\LuaScript.cs" />
     <Compile Include="Assets\Scripts\Map\CharaAnimator.cs" />

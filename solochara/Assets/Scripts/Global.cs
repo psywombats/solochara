@@ -10,7 +10,6 @@ public class Global : MonoBehaviour {
     private bool destructing;
     
     public InputManager Input { get; private set; }
-    public LuaInterpreter Lua { get; private set; }
     public MapManager Maps { get; private set; }
     public MemoryManager Memory { get; private set; }
     public AudioManager Audio { get; private set; }
@@ -56,7 +55,6 @@ public class Global : MonoBehaviour {
     private void InstantiateManagers() {
         Settings = gameObject.AddComponent<SettingsCollection>();
         Input = gameObject.AddComponent<InputManager>();
-        Lua = gameObject.AddComponent<LuaInterpreter>();
         Maps = gameObject.AddComponent<MapManager>();
         Memory = gameObject.AddComponent<MemoryManager>();
         Audio = gameObject.AddComponent<AudioManager>();

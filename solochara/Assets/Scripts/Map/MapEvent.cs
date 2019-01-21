@@ -8,6 +8,7 @@ using UnityEngine.Assertions;
  * The generic "thing on the map" class
  */
 [RequireComponent(typeof(Dispatch))]
+[RequireComponent(typeof(LuaContext))]
 [DisallowMultipleComponent]
 public abstract class MapEvent : MonoBehaviour {
     
@@ -122,14 +123,10 @@ public abstract class MapEvent : MonoBehaviour {
     // public
 
     public void Start() {
-        luaObject = Global.Instance().Lua.CreateEvent(this);
+        luaObject = new LuaMapEvent(this);
         luaObject.Set(PropertyCollide, LuaOnCollide);
         luaObject.Set(PropertyInteract, LuaOnInteract);
         luaObject.Set(PropertyCondition, LuaCondition);
-
-        if (GetComponent<AvatarEvent>() != null) {
-            Global.Instance().Lua.RegisterAvatar(GetComponent<AvatarEvent>());
-        }
 
         GetComponent<Dispatch>().RegisterListener(EventCollide, (object payload) => {
             OnCollide((AvatarEvent)payload);
@@ -206,7 +203,7 @@ public abstract class MapEvent : MonoBehaviour {
         if (lua == null || lua.Length == 0) {
             return null;
         } else {
-            return Global.Instance().Lua.CreateScript(lua);
+            return new LuaScript(GetComponent<LuaContext>(), lua);
         }
     }
 
@@ -214,7 +211,7 @@ public abstract class MapEvent : MonoBehaviour {
         if (lua == null || lua.Length == 0) {
             return null;
         } else {
-            return Global.Instance().Lua.CreateCondition(lua);
+            return GetComponent<LuaContext>().CreateCondition(lua);
         }
     }
 

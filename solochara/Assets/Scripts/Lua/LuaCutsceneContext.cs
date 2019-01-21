@@ -3,57 +3,43 @@ using System.Collections;
 using System;
 using MoonSharp.Interpreter;
 
-public class LuaCutsceneScript : LuaScript {
+public class LuaCutsceneContext : LuaContext {
 
-    public LuaCutsceneScript(MonoBehaviour owner, string script) : base(owner, script) {
+    private static readonly string DefinesPath = "Assets/Resources/Scripts/cutscene_defines.lua";
+    private static string cutsceneDefines;
 
+    public LuaCutsceneContext() : base() {
+        if (cutsceneDefines == null) {
+            TextAsset luaText = Resources.Load<TextAsset>(DefinesPath);
+            cutsceneDefines = luaText.text;
+        }
+        lua.DoString(cutsceneDefines);
     }
 
-    protected override void AssignGlobals() {
-        context.Globals["getSwitch"] = (Func<DynValue, DynValue>)GetSwitch;
-        context.Globals["setSwitch"] = (Action<DynValue, DynValue>)SetSwitch;
-        context.Globals["eventNamed"] = (Func<DynValue, LuaMapEvent>)EventNamed;
-        context.Globals["playBGM"] = (Action<DynValue>)PlayBGM;
-        context.Globals["cs_teleportCoords"] = (Action<DynValue, DynValue, DynValue>)Teleport;
-        context.Globals["cs_teleport"] = (Action<DynValue, DynValue>)Teleport;
-        context.Globals["cs_fadeOutBGM"] = (Action<DynValue>)FadeOutBGM;
-        context.Globals["cs_fadeIn"] = (Action)FadeIn;
-        context.Globals["cs_fadeOut"] = (Action)FadeOut;
-    }
-
-    public override IEnumerator RunRoutine() {
+    public override IEnumerator RunRoutine(LuaScript script) {
         if (Global.Instance().Maps.Avatar != null) {
             Global.Instance().Maps.Avatar.PauseInput();
         }
-        yield return base.RunRoutine();
+        yield return base.RunRoutine(script);
         if (Global.Instance().Maps.Avatar != null) {
             Global.Instance().Maps.Avatar.UnpauseInput();
         }
     }
 
-    // meant to be evaluated synchronously
-    public LuaCondition CreateCondition(string luaScript) {
-        return new LuaCondition(context.LoadString(luaScript));
+    public void Start() {
+        lua.Globals["avatar"] = Global.Instance().Maps.Avatar.GetComponent<MapEvent>().luaObject;
     }
 
-    // creates an empty table as the lua representation of some c# object
-    public LuaMapEvent CreateEvent(MapEvent mapEvent) {
-        return new LuaMapEvent(CreateEmptyTable(), mapEvent);
-    }
-
-    // returns an empty dictionary/tablething in the global context
-    public DynValue CreateEmptyTable() {
-        return context.DoString("return {}");
-    }
-
-    // evaluates a lua function in the global context
-    public DynValue Evaluate(DynValue function) {
-        return context.Call(function);
-    }
-
-    // make sure the luaobject has been registered via [MoonSharpUserData]
-    public void SetGlobal(string key, object luaObject) {
-        context.Globals[key] = luaObject;
+    protected override void AssignGlobals() {
+        lua.Globals["getSwitch"] = (Func<DynValue, DynValue>)GetSwitch;
+        lua.Globals["setSwitch"] = (Action<DynValue, DynValue>)SetSwitch;
+        lua.Globals["eventNamed"] = (Func<DynValue, LuaMapEvent>)EventNamed;
+        lua.Globals["playBGM"] = (Action<DynValue>)PlayBGM;
+        lua.Globals["cs_teleportCoords"] = (Action<DynValue, DynValue, DynValue>)Teleport;
+        lua.Globals["cs_teleport"] = (Action<DynValue, DynValue>)Teleport;
+        lua.Globals["cs_fadeOutBGM"] = (Action<DynValue>)FadeOutBGM;
+        lua.Globals["cs_fadeIn"] = (Action)FadeIn;
+        lua.Globals["cs_fadeOut"] = (Action)FadeOut;
     }
 
     // === LUA CALLABLE ============================================================================

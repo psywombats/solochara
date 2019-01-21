@@ -8,79 +8,26 @@ using Coroutine = MoonSharp.Interpreter.Coroutine;
 
 // represents an runnable piece of Lua, usually from an event field
 public class LuaScript {
+    
+    protected LuaContext context;
 
-    private static readonly string DefinesPath = "Assets/Resources/Scripts/global_defines.lua";
+    public Coroutine scriptRoutine { get; private set;  }
+    public bool done { get; private set; }
 
-    protected MonoBehaviour owner;
-    protected Script context;
-
-    private Coroutine scriptRoutine;
-    private int blockingRoutines;
-
-    private static string defines;
-
-    public LuaScript(MonoBehaviour owner, string scriptString) {
-        this.owner = owner;
-        this.context = new Script();
+    public LuaScript(LuaContext context, string scriptString) {
+        this.context = context;
 
         string fullScript = "return function()\n" + scriptString + "\nend";
-        try {
-            DynValue scriptFunction = context.DoString(scriptString);
-            this.scriptRoutine = context.CreateCoroutine(scriptFunction).Coroutine;
-        } catch (SyntaxErrorException e) {
-            Debug.LogError("bad script: " + scriptString);
-            throw e;
-        }
-
-        if (defines == null) {
-            TextAsset luaText = Resources.Load<TextAsset>(DefinesPath);
-            defines = luaText.text;
-        }
-        context.DoString(defines);
-
-        AssignGlobals();
+        this.scriptRoutine = context.CreateScript(fullScript);
     }
 
-    public virtual IEnumerator RunRoutine() {
-        bool done = false;
-        scriptRoutine.Resume();
-        while (!done) {
-            yield return null;
-        }
+    public LuaScript(LuaContext context, DynValue function) {
+        this.scriptRoutine = context.lua.CreateCoroutine(function).Coroutine;
     }
 
-    protected virtual void AssignGlobals() {
-        context.Globals["debugLog"] = (Action<DynValue>)DebugLog;
-        context.Globals["playSFX"] = (Action<DynValue>)PlaySFX;
-        context.Globals["cs_wait"] = (Action<DynValue>)Wait;
-    }
-
-    // all coroutines that are meant to block execution of the script should go through here
-    protected void RunRoutineFromLua(IEnumerator routine) {
-        blockingRoutines += 1;
-        owner.StartCoroutine(CoUtils.RunWithCallback(routine, () => {
-            blockingRoutines -= 1;
-            if (blockingRoutines == 0) {
-                scriptRoutine.Resume();
-            }
-        }));
-    }
-
-    protected DynValue Marshal(object toMarshal) {
-        return DynValue.FromObject(context, toMarshal);
-    }
-
-    // === LUA CALLABLE ============================================================================
-
-    private void DebugLog(DynValue message) {
-        Debug.Log(message.CastToString());
-    }
-
-    private void Wait(DynValue seconds) {
-        RunRoutineFromLua(CoUtils.Wait((float)seconds.Number));
-    }
-
-    private void PlaySFX(DynValue sfxKey) {
-        Global.Instance().Audio.PlaySFX(sfxKey.String);
+    public IEnumerator RunRoutine() {
+        done = false;
+        yield return context.RunRoutine(this);
+        done = true;
     }
 }
