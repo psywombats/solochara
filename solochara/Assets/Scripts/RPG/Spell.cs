@@ -8,7 +8,7 @@ public class Spell : ScriptableObject {
 
     public string spellName;
     public int apCost;
-    public BattleAnimation animation;
+    public LuaAnimation animation;
     public TargetType targets;
     public Warhead warhead;
 

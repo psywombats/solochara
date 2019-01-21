@@ -60,8 +60,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Editor\AnimationPlayerEditor.cs" />
     <Compile Include="Assets\Editor\AudioImporter.cs" />
-    <Compile Include="Assets\Editor\BattleAnimationPlayerEditor.cs" />
+    <Compile Include="Assets\Editor\AutoExpandingScriptableDrawer.cs" />
     <Compile Include="Assets\Editor\BattleControllerEditor.cs" />
     <Compile Include="Assets\Editor\ClipInfo.cs" />
     <Compile Include="Assets\Editor\FontImporter.cs" />
@@ -70,7 +71,6 @@
     <Compile Include="Assets\Editor\SpellEditor.cs" />
     <Compile Include="Assets\Editor\SpriteImporter.cs" />
     <Compile Include="Assets\Editor\StatSetDrawer.cs" />
-    <Compile Include="Assets\Editor\WarheadDrawer.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/aking_2/solochara/solochara/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>

@@ -3,8 +3,8 @@
 using UnityEngine;
 using UnityEditor;
 
-[CustomPropertyDrawer(typeof(Warhead), true)]
-public class WarheadDrawer : PropertyDrawer {
+[CustomPropertyDrawer(typeof(AutoExpandingScriptableObject), true)]
+public class AutoExpandingScriptableDrawer : PropertyDrawer {
 
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
         float totalHeight = EditorGUIUtility.singleLineHeight;

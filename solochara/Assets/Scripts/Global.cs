@@ -46,6 +46,7 @@ public class Global : MonoBehaviour {
 
     public void Awake() {
         DontDestroyOnLoad(gameObject);
+        MoonSharp.Interpreter.UserData.RegisterAssembly();
     }
 
     public void OnDestroy() {

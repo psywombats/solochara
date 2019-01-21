@@ -1,16 +1,13 @@
 ﻿using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(BattleAnimationPlayer))]
-public class BattleAnimationDrawer : Editor {
+[CustomEditor(typeof(AnimationPlayer))]
+public class AnimationPlayerDrawer : Editor {
 
     public override void OnInspectorGUI() {
-        if (!Application.isPlaying) {
-            return;
-        }
         base.OnInspectorGUI();
-        BattleAnimationPlayer player = (BattleAnimationPlayer)target;
-        if (player.anim != null) {
+        AnimationPlayer player = (AnimationPlayer)target;
+        if (player.anim != null && Application.IsPlaying(player)) {
             Editor.CreateEditor(player.anim).DrawDefaultInspector();
             if (!player.isPlayingAnimation) {
                 if (GUILayout.Button("Play animation")) {

@@ -6,14 +6,14 @@ using System.Collections.Generic;
 /**
  *  Generic class for everything a spell can do
  */
-public abstract class Warhead : ScriptableObject {
+public abstract class Warhead : AutoExpandingScriptableObject {
 
     protected IntentSpell intent;
 
     protected Spell spell { get { return intent.spell; } }
     protected BattleUnit actor { get { return intent.actor; } }
     protected Battle battle { get { return intent.battle; } }
-    protected BattleAnimation anim { get { return spell.animation; } }
+    protected LuaAnimation anim { get { return spell.animation; } }
     protected BattleController controller { get { return intent.battle.controller; } }
     protected BattleAnimationPlayer animator { get { return controller.animator; } }
 

@@ -8,7 +8,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <ProjectGuid>{1D6416A7-B19C-4CF6-BCC0-62F3A1ECF086}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -68,13 +69,15 @@
     <Compile Include="Assets\Demigiant\DOTween\Modules\DOTweenModuleUnityVersion.cs" />
     <Compile Include="Assets\Demigiant\DOTween\Modules\DOTweenModuleUtils.cs" />
     <Compile Include="Assets\Scripts\Animation\AfterimageComponent.cs" />
+    <Compile Include="Assets\Scripts\Animation\AnimationPlayer.cs" />
     <Compile Include="Assets\Scripts\Animation\AnimationTarget.cs" />
-    <Compile Include="Assets\Scripts\Animation\BattleAnimation.cs" />
     <Compile Include="Assets\Scripts\Animation\BattleAnimationPlayer.cs" />
+    <Compile Include="Assets\Scripts\Animation\LuaAnimation.cs" />
     <Compile Include="Assets\Scripts\Animation\Oscillator.cs" />
     <Compile Include="Assets\Scripts\Animation\SimpleSpriteAnimator.cs" />
     <Compile Include="Assets\Scripts\Audio\AudioManager.cs" />
     <Compile Include="Assets\Scripts\Audio\WaveSource.cs" />
+    <Compile Include="Assets\Scripts\Data\AutoExpandingScriptableObject.cs" />
     <Compile Include="Assets\Scripts\Data\BGMIndexData.cs" />
     <Compile Include="Assets\Scripts\Data\GenericDataObject.cs" />
     <Compile Include="Assets\Scripts\Data\GenericIndex.cs" />
@@ -89,7 +92,7 @@
     <Compile Include="Assets\Scripts\IO\InputListener.cs" />
     <Compile Include="Assets\Scripts\IO\InputManager.cs" />
     <Compile Include="Assets\Scripts\Lua\LuaCondition.cs" />
-    <Compile Include="Assets\Scripts\Lua\LuaInterpreter.cs" />
+    <Compile Include="Assets\Scripts\Lua\LuaCutsceneScript.cs" />
     <Compile Include="Assets\Scripts\Lua\LuaMapEvent.cs" />
     <Compile Include="Assets\Scripts\Lua\LuaScript.cs" />
     <Compile Include="Assets\Scripts\Map\CharaAnimator.cs" />

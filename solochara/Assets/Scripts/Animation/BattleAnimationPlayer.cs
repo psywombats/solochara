@@ -2,46 +2,31 @@
 using System.Collections;
 using MoonSharp.Interpreter;
 
-public class BattleAnimationPlayer : MonoBehaviour {
+public class BattleAnimationPlayer : AnimationPlayer {
 
     public Doll attacker = null;
     public Doll defender = null;
-    public BattleAnimation anim = null;
 
-    public bool isPlayingAnimation { get; private set; }
-
-    public void EditorReset() {
+    public override void EditorReset() {
+        base.EditorReset();
         attacker.ResetAfterAnimation();
         defender.ResetAfterAnimation();
-        isPlayingAnimation = false;
     }
 
-    private void SetUpLua() {
-        Global.Instance().Lua.SetGlobal("attacker", attacker);
-        Global.Instance().Lua.SetGlobal("battle", attacker); // lol, too cheap to set as global
-        Global.Instance().Lua.SetGlobal("defender", defender);
-    }
-
-    public IEnumerator PlayAnimationRoutine(BattleAnimation anim, Doll attacker, Doll defender) {
+    public IEnumerator PlayAnimationRoutine(LuaAnimation anim, Doll attacker, Doll defender) {
         this.attacker = attacker;
         this.defender = defender;
-        SetUpLua();
         yield return PlayAnimationRoutine(anim);
     }
 
-    public IEnumerator PlayAnimationRoutine(BattleAnimation anim) {
-        this.anim = anim;
-        yield return PlayAnimationRoutine();
-    }
-
-    public IEnumerator PlayAnimationRoutine() {
-        SetUpLua();
+    public override IEnumerator PlayAnimationRoutine() {
+        Global.Instance().Lua.SetGlobal("attacker", attacker);
+        Global.Instance().Lua.SetGlobal("battle", attacker); // lol, too cheap to set as global
+        Global.Instance().Lua.SetGlobal("defender", defender);
         attacker.PrepareForBattleAnimation(this, Doll.Type.Attacker);
         defender.PrepareForBattleAnimation(this, Doll.Type.Defender);
-        isPlayingAnimation = true;
-        yield return anim.ToScript().RunRoutine();
+        yield return base.PlayAnimationRoutine();
         attacker.ResetAfterAnimation();
         defender.ResetAfterAnimation();
-        isPlayingAnimation = false;
     }
 }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using MoonSharp.Interpreter;
 using System;
+using DG.Tweening;
 
 [MoonSharpUserData]
 public class AnimationTarget : MonoBehaviour {
@@ -20,10 +21,15 @@ public class AnimationTarget : MonoBehaviour {
     protected static readonly string ArgRed = "r";
     protected static readonly string ArgBlue = "b";
     protected static readonly string ArgGreen = "g";
+    protected static readonly string ArgAlpha = "a";
+    protected static readonly string ArgX = "x";
+    protected static readonly string ArgY = "y";
     protected static readonly float DefaultFrameDuration = 0.12f;
 
     public SpriteRenderer appearance;
+    public bool resetAfterPlaying = true;
 
+    protected Color originalColor;
     protected Vector3 originalPos;
 
     private CharaAnimator _animator;
@@ -39,20 +45,24 @@ public class AnimationTarget : MonoBehaviour {
     [MoonSharpHidden]
     public void PrepareForAnimation() {
         originalPos = transform.position;
+        originalColor = appearance.color;
     }
 
     [MoonSharpHidden]
     public virtual void ResetAfterAnimation() {
-        transform.position = originalPos;
+        if (resetAfterPlaying) {
+            transform.position = originalPos;
+            appearance.color = originalColor;
+        }
     }
 
     // === COMMAND HELPERS =========================================================================
-    
+
     protected void CSRun(IEnumerator routine, DynValue args) {
         StartCoroutine(routine);
     }
-    
-    protected float FloatArg(DynValue args, string argName, float defaultValue) {
+
+    protected float FloatArg(DynValue args, string argName, float defaultValue = 0.0f) {
         if (args == DynValue.Nil || args == null || args.Table == null) {
             return defaultValue;
         } else {
@@ -61,7 +71,7 @@ public class AnimationTarget : MonoBehaviour {
         }
     }
 
-    protected bool BoolArg(DynValue args, string argName, bool defaultValue) {
+    protected bool BoolArg(DynValue args, string argName, bool defaultValue = false) {
         if (args == DynValue.Nil || args == null || args.Table == null) {
             return defaultValue;
         } else {
@@ -79,24 +89,30 @@ public class AnimationTarget : MonoBehaviour {
     }
 
     protected IEnumerator ColorRoutine(DynValue args, float a, Func<Color> getColor, Action<Color> applyColor) {
+        Color originalColor = getColor();
         float elapsed = 0.0f;
-        float duration = FloatArg(args, ArgDuration, 0.4f);
+        float duration = FloatArg(args, ArgDuration, 0.0f);
         float speed = FloatArg(args, ArgSpeed, 0.2f);
         Vector3 startPos = transform.localPosition;
-        float r = (float)args.Table.Get(ArgRed).Number;
-        float g = (float)args.Table.Get(ArgGreen).Number;
-        float b = (float)args.Table.Get(ArgBlue).Number;
-        Color originalColor = getColor();
-        while (elapsed < duration) {
+        float r = FloatArg(args, ArgRed, originalColor.r);
+        float g = FloatArg(args, ArgGreen, originalColor.g);
+        float b = FloatArg(args, ArgBlue, originalColor.b);
+
+        while (elapsed < Mathf.Max(duration, speed)) {
             elapsed += Time.deltaTime;
             float t;
-            if (elapsed < speed) {
-                t = elapsed / speed;
-            } else if (elapsed > (duration - speed)) {
-                t = (duration - elapsed) / speed;
+            if (duration > 0) {
+                if (elapsed < speed) {
+                    t = elapsed / speed;
+                } else if (elapsed > (duration - speed)) {
+                    t = (duration - elapsed) / speed;
+                } else {
+                    t = 1.0f;
+                }
             } else {
-                t = 1.0f;
+                t = elapsed / speed;
             }
+
             Color color = new Color(
                 Mathf.Lerp(originalColor.r, r, t),
                 Mathf.Lerp(originalColor.g, g, t),
@@ -105,7 +121,9 @@ public class AnimationTarget : MonoBehaviour {
             applyColor(color);
             yield return null;
         }
-        applyColor(originalColor);
+        if (duration > 0) {
+            applyColor(originalColor);
+        }
     }
 
     // === LUA FUNCTIONS ===========================================================================
@@ -150,10 +168,11 @@ public class AnimationTarget : MonoBehaviour {
         cam.transform.localPosition = camPosition;
     }
 
-    // tint({r, g, b, duration?, speed?})
+    // tint({r, g, b, a?, duration?, speed?})
     public void tint(DynValue args) { CSRun(cs_tint(args), args); }
     private IEnumerator cs_tint(DynValue args) {
-        yield return ColorRoutine(args, 1.0f, () => {
+        float a = FloatArg(args, ArgAlpha, appearance.color.a);
+        yield return ColorRoutine(args, a, () => {
             return appearance.color;
         }, (Color c) => {
             appearance.color = c;
@@ -173,5 +192,24 @@ public class AnimationTarget : MonoBehaviour {
             color = c;
             appearance.material.SetColor("_Flash", c);
         });
+    }
+
+    // tweenMove({x, y, duration})
+    public void tweenMove(DynValue args) { CSRun(cs_tweenMove(args), args); }
+    private IEnumerator cs_tweenMove(DynValue args) {
+        float x = FloatArg(args, ArgX);
+        float y = FloatArg(args, ArgY);
+        float duration = FloatArg(args, ArgDuration);
+        Tweener tween = transform.DOLocalMove(new Vector3(x, y, transform.position.z), duration, true);
+        yield return CoUtils.RunTween(tween);
+    }
+
+    // tweenTo({x, y, duration})
+    public void tweenScale(DynValue args) { CSRun(cs_scale(args), args); }
+    private IEnumerator cs_scale(DynValue args) {
+        float x = FloatArg(args, ArgX);
+        float y = FloatArg(args, ArgY);
+        float duration = FloatArg(args, ArgDuration);
+        yield return CoUtils.RunTween(transform.DOScale(new Vector3(x, y, transform.localScale.z), duration));
     }
 }

@@ -17,6 +17,8 @@ public class Doll : AnimationTarget {
     public BattleAnimationPlayer player { get; private set; }
     public BattleUnit unit { get; private set; }
 
+    public DamagePopup damagePopup;
+
     private Type type;
 
     [MoonSharpHidden]
