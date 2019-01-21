@@ -4,11 +4,12 @@ using MoonSharp.Interpreter;
 using Coroutine = MoonSharp.Interpreter.Coroutine;
 using System;
 using UnityEngine.Assertions;
+using System.IO;
 
 // a wrapper around Script that represents an environment where a script can execute
 public class LuaContext : MonoBehaviour {
 
-    private static readonly string DefinesPath = "Assets/Resources/Scripts/global_defines.lua";
+    private static readonly string DefinesPath = "Assets/Resources/Lua/global_defines.lua";
     private static string defines;
 
     public Script lua { get; private set; }
@@ -16,14 +17,10 @@ public class LuaContext : MonoBehaviour {
     private LuaScript activeScript;
     private int blockingRoutines;
 
-    public LuaContext() {
+    public void Awake() {
         lua = new Script();
-
-        if (defines == null) {
-            TextAsset luaText = Resources.Load<TextAsset>(DefinesPath);
-            defines = luaText.text;
-        }
-        lua.DoString(defines);
+        LoadDefines(DefinesPath);
+        AssignGlobals();
     }
 
     // make sure the luaobject has been registered via [MoonSharpUserData]
@@ -62,7 +59,7 @@ public class LuaContext : MonoBehaviour {
 
     // meant to be evaluated synchronously
     public LuaCondition CreateCondition(string luaScript) {
-        return new LuaCondition(lua.LoadString(luaScript));
+        return new LuaCondition(this, lua.LoadString(luaScript));
     }
 
     // evaluates a lua function in the global context
@@ -78,7 +75,12 @@ public class LuaContext : MonoBehaviour {
     public virtual IEnumerator RunRoutine(LuaScript script) {
         Assert.IsNull(this.activeScript);
         this.activeScript = script;
-        script.scriptRoutine.Resume();
+        try {
+            script.scriptRoutine.Resume();
+        } catch (Exception e) {
+            Debug.Log("Exception during script: " + script);
+            throw e;
+        }
         while (script.scriptRoutine.State != CoroutineState.Dead) {
             yield return null;
         }
@@ -89,6 +91,12 @@ public class LuaContext : MonoBehaviour {
         lua.Globals["debugLog"] = (Action<DynValue>)DebugLog;
         lua.Globals["playSFX"] = (Action<DynValue>)PlaySFX;
         lua.Globals["cs_wait"] = (Action<DynValue>)Wait;
+    }
+
+    protected void LoadDefines(string definesPath) {
+        StreamReader reader = new StreamReader(DefinesPath);
+        lua.DoStream(reader.BaseStream);
+        reader.Close();
     }
 
     // === LUA CALLABLE ============================================================================

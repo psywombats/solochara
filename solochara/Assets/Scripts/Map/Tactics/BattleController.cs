@@ -8,7 +8,6 @@ using System.Linq;
  * Responsible for user input and rendering during a battle. Control flow is actually handled by
  * the Battle class.
  */
-[RequireComponent(typeof(Map))]
 public class BattleController : MonoBehaviour {
 
     private const string ListenerId = "BattleControllerListenerId";

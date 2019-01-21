@@ -43,7 +43,7 @@ public class BattleUnit {
         battle.Log(this + " took " + damage + " damages");
         unit.stats.Sub(StatTag.HP, damage);
         yield return doll.damagePopup.ActivateRoutine(damage);
-        yield return CoUtils.Wait(0.8f);
+        yield return CoUtils.Wait(0.7f);
         yield return doll.damagePopup.DeactivateRoutine();
         if (IsDead()) {
             yield return DeathRoutine();

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(LuaContext))]
 public class AnimationPlayer : MonoBehaviour {
     
     public AnimationTarget target;
@@ -14,8 +15,8 @@ public class AnimationPlayer : MonoBehaviour {
 
     public virtual IEnumerator PlayAnimationRoutine() {
         isPlayingAnimation = true;
-        LuaScript script = anim.ToScript();
-        script.SetGlobal("target", target);
+        LuaScript script = anim.ToScript(GetComponent<LuaContext>());
+        GetComponent<LuaContext>().SetGlobal("target", target);
         yield return script.RunRoutine();
         isPlayingAnimation = false;
     }

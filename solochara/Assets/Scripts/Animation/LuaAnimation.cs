@@ -13,8 +13,7 @@ public class LuaAnimation : ScriptableObject {
     [TextArea(6, 24)]
     public string script;
 
-    public LuaScript ToScript() {
-        return Global.Instance().Lua.CreateScript(script);
+    public LuaScript ToScript(LuaContext context) {
+        return new LuaScript(context, script);
     }
-
 }

@@ -200,7 +200,8 @@ public class AnimationTarget : MonoBehaviour {
         float x = FloatArg(args, ArgX);
         float y = FloatArg(args, ArgY);
         float duration = FloatArg(args, ArgDuration);
-        Tweener tween = transform.DOLocalMove(new Vector3(x, y, transform.position.z), duration, true);
+        Vector3 target = transform.position + new Vector3(x, y, 0.0f);
+        Tweener tween = DOTween.To(() => transform.position, v => transform.position = v, target, duration);
         yield return CoUtils.RunTween(tween);
     }
 

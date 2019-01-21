@@ -20,9 +20,8 @@ public class BattleAnimationPlayer : AnimationPlayer {
     }
 
     public override IEnumerator PlayAnimationRoutine() {
-        Global.Instance().Lua.SetGlobal("attacker", attacker);
-        Global.Instance().Lua.SetGlobal("battle", attacker); // lol, too cheap to set as global
-        Global.Instance().Lua.SetGlobal("defender", defender);
+        GetComponent<LuaContext>().SetGlobal("attacker", attacker);
+        GetComponent<LuaContext>().SetGlobal("defender", defender);
         attacker.PrepareForBattleAnimation(this, Doll.Type.Attacker);
         defender.PrepareForBattleAnimation(this, Doll.Type.Defender);
         yield return base.PlayAnimationRoutine();
