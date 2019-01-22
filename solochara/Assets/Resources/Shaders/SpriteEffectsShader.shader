@@ -52,7 +52,7 @@
 
             fixed4 frag(v2f IN) : SV_Target {
                 float2 xy = IN.texcoord;
-                fixed4 c = SampleSpriteTexture(xy);
+                fixed4 c = SampleSpriteTexture(xy) * IN.color;
                 float avg = (c[0] + c[1] + c[2]) / 3.0;
                 float4 desat = float4(avg / 2.0, avg / 2.0, avg / 2.0, c.a);
                 c.rgb = c.rgb * (1.0 - _Desaturation) + desat.rgb * (_Desaturation);

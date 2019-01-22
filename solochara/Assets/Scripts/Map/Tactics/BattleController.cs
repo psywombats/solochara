@@ -75,10 +75,11 @@ public class BattleController : MonoBehaviour {
     
     public IEnumerator SelectSpellsRoutine(Result<List<Intent>> result, BattleUnit hero) {
         List<Intent> queuedIntents = new List<Intent>();
+        List<Spell> previousSpells = new List<Spell>();
         yield return spellSelect.EnableRoutine(hero.unit.spells);
         while (hero.Get(StatTag.AP) > 0) {
             Result<Selectable> cardResult = new Result<Selectable>();
-            yield return spellSelect.SelectSpellRoutine(cardResult);
+            yield return spellSelect.SelectSpellRoutine(cardResult, previousSpells);
             if (cardResult.canceled) {
                 // canceled the selection
                 if (queuedIntents.Count > 0) {
@@ -86,6 +87,7 @@ public class BattleController : MonoBehaviour {
                     Intent canceled = queuedIntents.Last();
                     hero.unit.stats.Add(StatTag.AP, canceled.APCost());
                     queuedIntents.RemoveAt(queuedIntents.Count - 1);
+                    previousSpells.RemoveAt(previousSpells.Count - 1);
                 } else {
                     Global.Instance().Audio.PlaySFX("error");
                 }
@@ -101,6 +103,7 @@ public class BattleController : MonoBehaviour {
                     yield return intent.AcquireTargetsRoutine(targetsResult);
                     if (!targetsResult.canceled) {
                         queuedIntents.Add(intent);
+                        previousSpells.Add(spell);
                     } else {
                         hero.unit.stats.Add(StatTag.AP, spell.apCost);
                     }

@@ -89,14 +89,16 @@ public class GroupSelector : MonoBehaviour, InputListener {
         yield break;
     }
 
-    public IEnumerator SelectSpecificallyRoutine(Intent intent) {
+    public IEnumerator SelectSpecificallyRoutine(Result<BattleUnit> result, Intent intent) {
         StartSingle(null);
         GetSelectedDoll().GetComponent<Selectable>().selected = false;
         for (int i = selectionIndex; GetSelectedDoll().unit != intent.actor; i += 1) ;
         GetSelectedDoll().GetComponent<Selectable>().selected = true;
+        awaitingConfirm = true;
         while (awaitingConfirm) {
             yield return null;
         }
+        result.value = intent.actor;
         EndSingle();
     }
 

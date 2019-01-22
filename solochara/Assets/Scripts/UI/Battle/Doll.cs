@@ -4,6 +4,7 @@ using MoonSharp.Interpreter;
 
 [MoonSharpUserData]
 [RequireComponent(typeof(Selectable))]
+[RequireComponent(typeof(AnimationPlayer))]
 public class Doll : AnimationTarget {
 
     private static readonly float DefaultJumpHeight = 1.2f;
@@ -13,11 +14,12 @@ public class Doll : AnimationTarget {
         Attacker,
         Defender,
     }
-
-    public BattleAnimationPlayer player { get; private set; }
+    
+    public BattleAnimationPlayer battleAnimPlayer { get; private set; }
     public BattleUnit unit { get; private set; }
 
     public DamagePopup damagePopup;
+    public LuaAnimation deathAnimation;
 
     private Type type;
 
@@ -35,7 +37,7 @@ public class Doll : AnimationTarget {
     [MoonSharpHidden]
     public void PrepareForBattleAnimation(BattleAnimationPlayer player, Type type) {
         PrepareForAnimation();
-        this.player = player;
+        this.battleAnimPlayer = player;
         this.type = type;
         if (animator != null) {
             animator.PrepareForAnimation();
@@ -81,7 +83,7 @@ public class Doll : AnimationTarget {
     // jumpToDefender({});
     public void jumpToDefender(DynValue args) { CSRun(cs_jumpToDefender(args), args); }
     private IEnumerator cs_jumpToDefender(DynValue args) {
-        Vector3 endPos = CalculateJumpOffset(transform.position, player.defender.transform.position);
+        Vector3 endPos = CalculateJumpOffset(transform.position, battleAnimPlayer.defender.transform.position);
         float duration = (float)args.Table.Get(ArgDuration).Number;
         yield return JumpRoutine(endPos, duration, DefaultJumpHeight);
     }

@@ -58,8 +58,8 @@ public class BattleUnit {
     }
 
     public IEnumerator DeathRoutine() {
-        // ??? todo I guess
         battle.Log(this + " died");
+        yield return doll.GetComponent<AnimationPlayer>().PlayAnimationRoutine(doll.deathAnimation);
         doll.appearance.sprite = null;
         yield return null;
     }
