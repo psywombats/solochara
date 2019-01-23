@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 /**
  * A big bad brain that dictates how enemy units take their turns. It's a scriptable object that
@@ -22,8 +23,10 @@ public class AIController : ScriptableObject {
     public IEnumerator PlayNextAIActionRoutine() {
         BattleUnit actor = battle.GetFaction(Alignment.Enemy).NextMoveableUnit();
 
+        // TODO: AI
+
         Spell spell = RandomUtils.RandomItem(battle.r, actor.unit.spells);
-        IntentSpell intent = new IntentSpell(battle, actor, spell);
+        IntentSpell intent = new IntentSpell(battle, actor, spell, new List<Spell>());
         intent.AcquireAITargets();
         yield return intent.ResolveRoutine();
 

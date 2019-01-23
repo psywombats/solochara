@@ -116,6 +116,7 @@
     <Compile Include="Assets\Scripts\Map\Tactics\DuelCam.cs" />
     <Compile Include="Assets\Scripts\RPG\AIController.cs" />
     <Compile Include="Assets\Scripts\RPG\Alignment.cs" />
+    <Compile Include="Assets\Scripts\RPG\BaseSpell.cs" />
     <Compile Include="Assets\Scripts\RPG\Battle.cs" />
     <Compile Include="Assets\Scripts\RPG\BattleFaction.cs" />
     <Compile Include="Assets\Scripts\RPG\BattleUnit.cs" />
@@ -123,6 +124,7 @@
     <Compile Include="Assets\Scripts\RPG\Intents\Intent.cs" />
     <Compile Include="Assets\Scripts\RPG\Intents\IntentSpell.cs" />
     <Compile Include="Assets\Scripts\RPG\PartyManager.cs" />
+    <Compile Include="Assets\Scripts\RPG\PrefixSpell.cs" />
     <Compile Include="Assets\Scripts\RPG\Spell.cs" />
     <Compile Include="Assets\Scripts\RPG\Stat\CombinationAdditive.cs" />
     <Compile Include="Assets\Scripts\RPG\Stat\CombinationStrategy.cs" />
@@ -131,6 +133,9 @@
     <Compile Include="Assets\Scripts\RPG\Stat\StatTag.cs" />
     <Compile Include="Assets\Scripts\RPG\TargetType.cs" />
     <Compile Include="Assets\Scripts\RPG\Unit.cs" />
+    <Compile Include="Assets\Scripts\RPG\Warheads\Prefix.cs" />
+    <Compile Include="Assets\Scripts\RPG\Warheads\PrefixBoost.cs" />
+    <Compile Include="Assets\Scripts\RPG\Warheads\PrefixNothing.cs" />
     <Compile Include="Assets\Scripts\RPG\Warheads\Warhead.cs" />
     <Compile Include="Assets\Scripts\RPG\Warheads\WarheadDamage.cs" />
     <Compile Include="Assets\Scripts\RPG\Warheads\WarheadHeal.cs" />

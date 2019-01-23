@@ -63,12 +63,14 @@
     <Compile Include="Assets\Editor\AnimationPlayerEditor.cs" />
     <Compile Include="Assets\Editor\AudioImporter.cs" />
     <Compile Include="Assets\Editor\AutoExpandingScriptableDrawer.cs" />
+    <Compile Include="Assets\Editor\BaseSpellEditor.cs" />
     <Compile Include="Assets\Editor\BattleControllerEditor.cs" />
     <Compile Include="Assets\Editor\ClipInfo.cs" />
     <Compile Include="Assets\Editor\FontImporter.cs" />
     <Compile Include="Assets\Editor\InstanceMultiControllerEditor.cs" />
     <Compile Include="Assets\Editor\MapCameraEditor.cs" />
-    <Compile Include="Assets\Editor\SpellEditor.cs" />
+    <Compile Include="Assets\Editor\PolymorphicFieldEditor.cs" />
+    <Compile Include="Assets\Editor\PrefixSpellEditor.cs" />
     <Compile Include="Assets\Editor\SpriteImporter.cs" />
     <Compile Include="Assets\Editor\StatSetDrawer.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">

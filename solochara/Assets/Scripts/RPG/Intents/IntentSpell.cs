@@ -6,9 +6,11 @@ public class IntentSpell : Intent {
 
     public Spell spell { get; private set; }
     public List<BattleUnit> targets { get; private set; }
+    protected List<Spell> prefixes { get; private set; }
 
-    public IntentSpell(Battle battle, BattleUnit actor, Spell spell) : base(battle, actor) {
+    public IntentSpell(Battle battle, BattleUnit actor, Spell spell, List<Spell> prefixes) : base(battle, actor) {
         this.spell = spell;
+        this.prefixes = prefixes;
     }
 
     public override IEnumerator ResolveRoutine() {

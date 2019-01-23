@@ -99,7 +99,7 @@ public class BattleController : MonoBehaviour {
                     hero.unit.stats.Sub(StatTag.AP, spell.apCost);
                     // find a target for the spell
                     Result<List<BattleUnit>> targetsResult = new Result<List<BattleUnit>>();
-                    IntentSpell intent = new IntentSpell(this.battle, hero, spell);
+                    IntentSpell intent = new IntentSpell(this.battle, hero, spell, previousSpells);
                     yield return intent.AcquireTargetsRoutine(targetsResult);
                     if (!targetsResult.canceled) {
                         queuedIntents.Add(intent);
