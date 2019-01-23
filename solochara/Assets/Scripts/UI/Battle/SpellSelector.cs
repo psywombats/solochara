@@ -56,24 +56,6 @@ public class SpellSelector : MonoBehaviour, InputListener {
     }
 
     public IEnumerator SelectSpellRoutine(Result<Selectable> result, List<Spell> previous) {
-        foreach (Transform child in attachmentPoint.transform) {
-            SpellCard card = child.GetComponent<SpellCard>();
-            if (card != null) {
-                foreach (SpellChainMutation mutation in card.spell.chainingMutations) {
-                    bool contains = false;
-                    foreach (Spell spell in previous) {
-                        if (spell == mutation.precedingSpell) {
-                            contains = true;
-                            break;
-                        }
-                    }
-                    if (contains) {
-                        card.Populate(card.spell, mutation.turnsThisIntoSpell);
-                        break;
-                    }
-                }
-            }
-        }
         GetSelectedCard().selected = true;
         this.awaitingResult = result;
         while (!awaitingResult.finished) {

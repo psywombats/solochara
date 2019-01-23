@@ -124,7 +124,6 @@
     <Compile Include="Assets\Scripts\RPG\Intents\IntentSpell.cs" />
     <Compile Include="Assets\Scripts\RPG\PartyManager.cs" />
     <Compile Include="Assets\Scripts\RPG\Spell.cs" />
-    <Compile Include="Assets\Scripts\RPG\SpellChainMutation.cs" />
     <Compile Include="Assets\Scripts\RPG\Stat\CombinationAdditive.cs" />
     <Compile Include="Assets\Scripts\RPG\Stat\CombinationStrategy.cs" />
     <Compile Include="Assets\Scripts\RPG\Stat\Stat.cs" />
