@@ -13,6 +13,10 @@ public class BaseSpell : Spell {
         yield return warhead.ResolveRoutine((IntentSpell)intent);
     }
 
+    public override bool LinksToNextSpell() {
+        return false;
+    }
+
     public override IEnumerator AcquireTargetsRoutine(Result<List<BattleUnit>> result, Intent intent) {
         BattleController controller = intent.battle.controller;
         Result<BattleUnit> unitResult = new Result<BattleUnit>();

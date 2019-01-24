@@ -7,6 +7,7 @@ public abstract class Spell : ScriptableObject {
 
     public string spellName;
     public int apCost;
+    public Color pipColor;
     public LuaAnimation animation;
 
     public abstract IEnumerator ResolveRoutine(Intent intent);
@@ -14,6 +15,8 @@ public abstract class Spell : ScriptableObject {
     public abstract IEnumerator AcquireTargetsRoutine(Result<List<BattleUnit>> result, Intent intent);
 
     public abstract List<BattleUnit> AcquireAITargets(IntentSpell intent);
+
+    public abstract bool LinksToNextSpell();
 
     protected List<BattleUnit> GetAllies(IntentSpell intent) {
         return intent.battle.UnitsByAlignment(intent.actor.align).ToList();

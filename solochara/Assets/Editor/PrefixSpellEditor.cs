@@ -3,10 +3,15 @@ using System;
 using UnityEngine;
 
 [CustomEditor(typeof(PrefixSpell))]
+[CanEditMultipleObjects]
 public class PrefixSpellEditor : PolymorphicFieldEditor {
 
     public override void OnInspectorGUI() {
         DrawDefaultInspector();
+
+        if (serializedObject.FindProperty("effect").hasMultipleDifferentValues) {
+            return;
+        }
 
         PrefixSpell spell = (PrefixSpell)target;
         spell.effect = DrawSelector(spell.effect);

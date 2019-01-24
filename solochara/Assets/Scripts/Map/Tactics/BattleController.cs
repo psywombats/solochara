@@ -21,6 +21,7 @@ public class BattleController : MonoBehaviour {
     public GroupSelector enemySelect;
     public GroupSelector allSelect;
     public BattleAnimationPlayer animator;
+    public SpellLinkMeter linker;
 
     // internal state
     private Dictionary<BattleUnit, Doll> dolls;
@@ -76,8 +77,10 @@ public class BattleController : MonoBehaviour {
     public IEnumerator SelectSpellsRoutine(Result<List<Intent>> result, BattleUnit hero) {
         List<Intent> queuedIntents = new List<Intent>();
         List<Spell> previousSpells = new List<Spell>();
+        linker.SetUp((int)hero.Get(StatTag.MAP));
         yield return spellSelect.EnableRoutine(hero.unit.spells);
         while (hero.Get(StatTag.AP) > 0) {
+            linker.Populate(previousSpells);
             Result<Selectable> cardResult = new Result<Selectable>();
             yield return spellSelect.SelectSpellRoutine(cardResult, previousSpells);
             if (cardResult.canceled) {
@@ -88,13 +91,13 @@ public class BattleController : MonoBehaviour {
                     hero.unit.stats.Add(StatTag.AP, canceled.APCost());
                     queuedIntents.RemoveAt(queuedIntents.Count - 1);
                     previousSpells.RemoveAt(previousSpells.Count - 1);
-                } else {
-                    Global.Instance().Audio.PlaySFX("error");
                 }
             } else if (cardResult.value.GetComponent<SpellCard>()) {
                 // selected a spell
                 Spell spell = cardResult.value.GetComponent<SpellCard>().spell;
-                if (hero.Get(StatTag.AP) >= spell.apCost) {
+                linker.Populate(new List<Spell>(previousSpells) { spell });
+                if (hero.Get(StatTag.AP) > spell.apCost ||
+                        (hero.Get(StatTag.AP) >= spell.apCost && !spell.LinksToNextSpell())) {
                     Global.Instance().Audio.PlaySFX("confirm");
                     hero.unit.stats.Sub(StatTag.AP, spell.apCost);
                     // find a target for the spell

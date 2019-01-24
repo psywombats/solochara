@@ -7,6 +7,10 @@ public class PrefixSpell : Spell {
 
     public Prefix effect;
 
+    public override bool LinksToNextSpell() {
+        return true;
+    }
+
     public override List<BattleUnit> AcquireAITargets(IntentSpell intent) {
         List<BattleUnit> units = new List<BattleUnit> {
             intent.actor

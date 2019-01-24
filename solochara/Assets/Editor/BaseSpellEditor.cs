@@ -3,10 +3,15 @@ using System;
 using UnityEngine;
 
 [CustomEditor(typeof(BaseSpell))]
+[CanEditMultipleObjects]
 public class BaseSpellEditor : PolymorphicFieldEditor {
 
     public override void OnInspectorGUI() {
         DrawDefaultInspector();
+
+        if (serializedObject.FindProperty("warhead").hasMultipleDifferentValues) {
+            return;
+        }
 
         BaseSpell spell = (BaseSpell)target;
         spell.warhead = DrawSelector(spell.warhead);
