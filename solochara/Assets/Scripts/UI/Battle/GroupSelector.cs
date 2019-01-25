@@ -103,7 +103,11 @@ public class GroupSelector : MonoBehaviour, InputListener {
         while (awaitingConfirm) {
             yield return null;
         }
-        result.value = intent.actor;
+        if (!canceledConfirm) {
+            result.value = intent.actor;
+        } else {
+            result.Cancel();
+        }
         EndSingle();
     }
 

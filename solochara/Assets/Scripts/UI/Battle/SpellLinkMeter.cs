@@ -36,6 +36,8 @@ public class SpellLinkMeter : MonoBehaviour {
                         } else {
                             AddPip(null, pipConnectorAttachmentPoint, null);
                         }
+                    } else {
+                         AddPip(null, pipConnectorAttachmentPoint, null);
                     }
                 } else {
                     AddPip(pipConnectorPrefab, pipConnectorAttachmentPoint, spell);
@@ -67,6 +69,7 @@ public class SpellLinkMeter : MonoBehaviour {
             pipObject = pip.gameObject;
         } else {
             pipObject = new GameObject("(no connector)");
+            pipObject.AddComponent<RectTransform>();
         }
         pipObject.transform.SetParent(attachmentPoint.transform);
     }
