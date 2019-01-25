@@ -11,6 +11,7 @@ public class GroupSelector : MonoBehaviour, InputListener {
     private int selectionIndex;
     private int dollFillIndex = 0;
     private bool awaitingConfirm;
+    private bool canceledConfirm;
 
     public void Start() {
         //int pivot = (int)Mathf.Floor(((float)(dolls.Count - 1)) / 2.0f);
@@ -41,6 +42,10 @@ public class GroupSelector : MonoBehaviour, InputListener {
             if (awaitingConfirm) {
                 if (command == InputManager.Command.Confirm) {
                     Global.Instance().Audio.PlaySFX("confirm");
+                    awaitingConfirm = false;
+                } else if (command == InputManager.Command.Cancel) {
+                    canceledConfirm = true;
+                    Global.Instance().Audio.PlaySFX("cancel");
                     awaitingConfirm = false;
                 }
             } else {
@@ -116,6 +121,7 @@ public class GroupSelector : MonoBehaviour, InputListener {
     }
 
     private void StartMulti() {
+        canceledConfirm = false;
         awaitingConfirm = true;
         foreach (Doll doll in dolls) {
             doll.GetComponent<Selectable>().selected = true;
@@ -125,9 +131,13 @@ public class GroupSelector : MonoBehaviour, InputListener {
 
     private void EndMulti(Result<List<BattleUnit>> result) {
         result.value = new List<BattleUnit>();
-        foreach (Doll doll in dolls) {
-            doll.GetComponent<Selectable>().selected = false;
-            result.value.Add(doll.unit);
+        if (canceledConfirm) {
+            result.Cancel();
+        } else {
+            foreach (Doll doll in dolls) {
+                doll.GetComponent<Selectable>().selected = false;
+                result.value.Add(doll.unit);
+            }
         }
         Global.Instance().Input.RemoveListener(this);
     }

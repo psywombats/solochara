@@ -11,6 +11,10 @@ public class PrefixSpell : Spell {
         return true;
     }
 
+    public override void ModifyIntent(IntentSpell next) {
+        next.AddPrefix(this);
+    }
+
     public override List<BattleUnit> AcquireAITargets(IntentSpell intent) {
         List<BattleUnit> units = new List<BattleUnit> {
             intent.actor
@@ -24,7 +28,7 @@ public class PrefixSpell : Spell {
         CopyUnitResult(result, unitResult);
     }
 
-    public override IEnumerator ResolveRoutine(Intent intent) {
+    public override IEnumerator ResolveRoutine(Intent intent, List<PrefixSpell> prefixes) {
         yield return intent.battle.controller.animator.PlayAnimationRoutine(animation,
             intent.actor.doll,
             intent.actor.doll);

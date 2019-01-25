@@ -9,6 +9,7 @@ using System.Collections.Generic;
 public abstract class Warhead : AutoExpandingScriptableObject {
 
     protected IntentSpell intent;
+    protected List<Prefix> prefixes;
 
     protected Spell spell { get { return intent.spell; } }
     protected BattleUnit actor { get { return intent.actor; } }
@@ -17,8 +18,9 @@ public abstract class Warhead : AutoExpandingScriptableObject {
     protected BattleController controller { get { return intent.battle.controller; } }
     protected BattleAnimationPlayer animator { get { return controller.animator; } }
 
-    public IEnumerator ResolveRoutine(IntentSpell intent) {
+    public IEnumerator ResolveRoutine(IntentSpell intent, List<Prefix> prefixes) {
         this.intent = intent;
+        this.prefixes = prefixes;
         yield return InternalResolveRoutine();
     }
 

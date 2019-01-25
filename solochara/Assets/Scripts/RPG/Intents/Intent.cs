@@ -19,4 +19,10 @@ public abstract class Intent {
     public abstract IEnumerator ResolveRoutine();
 
     public abstract int APCost();
+
+    public abstract bool ModifiesNextIntent();
+
+    public abstract void ModifyNextIntent(Intent intent);
+
+    public abstract void ConsumePrefixSpell(IntentSpell intent);
 }

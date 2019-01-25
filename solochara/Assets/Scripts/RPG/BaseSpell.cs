@@ -9,12 +9,20 @@ public class BaseSpell : Spell {
     public TargetType targets;
     public Warhead warhead;
 
-    public override IEnumerator ResolveRoutine(Intent intent) {
-        yield return warhead.ResolveRoutine((IntentSpell)intent);
+    public override IEnumerator ResolveRoutine(Intent intent, List<PrefixSpell> prefixes) {
+        List<Prefix> effects = new List<Prefix>();
+        foreach (PrefixSpell prefix in prefixes) {
+            effects.Add(prefix.effect);
+        }
+        yield return warhead.ResolveRoutine((IntentSpell)intent, effects);
     }
 
     public override bool LinksToNextSpell() {
         return false;
+    }
+
+    public override void ModifyIntent(IntentSpell next) {
+        Debug.Assert(false);
     }
 
     public override IEnumerator AcquireTargetsRoutine(Result<List<BattleUnit>> result, Intent intent) {

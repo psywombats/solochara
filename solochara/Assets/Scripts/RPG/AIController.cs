@@ -26,7 +26,7 @@ public class AIController : ScriptableObject {
         // TODO: AI
 
         Spell spell = RandomUtils.RandomItem(battle.r, actor.unit.spells);
-        IntentSpell intent = new IntentSpell(battle, actor, spell, new List<Spell>());
+        IntentSpell intent = new IntentSpell(battle, actor, spell);
         intent.AcquireAITargets();
         yield return intent.ResolveRoutine();
 

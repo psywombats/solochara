@@ -139,8 +139,17 @@ public class Battle : ScriptableObject {
         BattleUnit hero = this.GetFaction(Alignment.Hero).GetUnits().First();
         Result<List<Intent>> intentsResult = new Result<List<Intent>>();
         yield return controller.SelectSpellsRoutine(intentsResult, hero);
-        
+
+        List<Intent> prefixBuffer = new List<Intent>();
         foreach (Intent intent in intentsResult.value) {
+            if (intent.ModifiesNextIntent()) {
+                prefixBuffer.Add(intent);
+            } else {
+                foreach (Intent prefix in prefixBuffer) {
+                    prefix.ModifyNextIntent(intent);
+                }
+                prefixBuffer.Clear();
+            }
             yield return CoUtils.Wait(0.8f);
             yield return intent.ResolveRoutine();
         }

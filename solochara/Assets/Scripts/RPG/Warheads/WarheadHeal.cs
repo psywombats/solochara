@@ -14,8 +14,11 @@ public class WarheadHeal : Warhead {
             yield return animator.PlayAnimationRoutine(anim, actor.doll, target.doll);
         }
         foreach (BattleUnit target in GetLivingTargets()) {
-            int heal = Range(healLow, healHigh);
-            yield return target.HealRoutine(heal);
+            float heal = Range(healLow, healHigh);
+            foreach (Prefix prefix in this.prefixes) {
+                heal = prefix.ModifyHeal(this, heal);
+            }
+            yield return target.HealRoutine((int)heal);
         }
     }
 }

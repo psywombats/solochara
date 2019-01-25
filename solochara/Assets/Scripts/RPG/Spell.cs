@@ -10,13 +10,15 @@ public abstract class Spell : ScriptableObject {
     public Color pipColor;
     public LuaAnimation animation;
 
-    public abstract IEnumerator ResolveRoutine(Intent intent);
+    public abstract IEnumerator ResolveRoutine(Intent intent, List<PrefixSpell> prefixes);
 
     public abstract IEnumerator AcquireTargetsRoutine(Result<List<BattleUnit>> result, Intent intent);
 
     public abstract List<BattleUnit> AcquireAITargets(IntentSpell intent);
 
     public abstract bool LinksToNextSpell();
+
+    public abstract void ModifyIntent(IntentSpell next);
 
     protected List<BattleUnit> GetAllies(IntentSpell intent) {
         return intent.battle.UnitsByAlignment(intent.actor.align).ToList();

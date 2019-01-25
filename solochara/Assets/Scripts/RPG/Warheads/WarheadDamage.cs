@@ -14,8 +14,11 @@ public class WarheadDamage : Warhead {
             yield return animator.PlayAnimationRoutine(anim, actor.doll, target.doll);
         }
         foreach (BattleUnit target in GetLivingTargets()) {
-            int damage = Range(damageLow, damageHigh);
-            yield return target.TakeDamageRoutine(damage);
+            float damage = Range(damageLow, damageHigh);
+            foreach (Prefix prefix in this.prefixes) {
+                damage = prefix.ModifyDamage(this, damage);
+            }
+            yield return target.TakeDamageRoutine((int)damage);
         }
     }
 }
