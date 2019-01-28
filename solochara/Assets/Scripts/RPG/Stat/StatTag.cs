@@ -3,6 +3,8 @@ using System.Collections;
 
 public enum StatTag {
 
+    None,
+
     MHP,
     HP,
 
@@ -18,4 +20,6 @@ public enum StatTag {
     STAGGER_OFF,
     STAGGER_DEF,
     STAGGER_PEN,
+
+    POISON_DEF,
 }

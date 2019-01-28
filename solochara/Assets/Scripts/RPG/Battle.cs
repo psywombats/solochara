@@ -113,11 +113,12 @@ public class Battle : ScriptableObject {
         if (!factions.ContainsKey(align)) {
             yield break;
         }
-        factions[align].ResetForNewTurn();
         yield return controller.TurnBeginAnimationRoutine(align);
+        yield return factions[align].TurnStartRoutine();
         while (factions[align].HasUnitsLeftToAct()) {
             yield return PlayNextActionRoutine(align);
         }
+        yield return factions[align].TurnEndRoutine();
         yield return controller.TurnEndAnimationRoutine(align);
     }
 
@@ -137,8 +138,14 @@ public class Battle : ScriptableObject {
 
     private IEnumerator PlayHumanTurnRoutine() {
         BattleUnit hero = this.GetFaction(Alignment.Hero).GetUnits().First();
+
         Result<List<Intent>> intentsResult = new Result<List<Intent>>();
         yield return controller.SelectSpellsRoutine(intentsResult, hero);
+
+        yield return hero.ActionStartRoutine();
+        if (hero.IsDead()) {
+            yield break;
+        }
 
         List<Intent> prefixBuffer = new List<Intent>();
         foreach (Intent intent in intentsResult.value) {
@@ -154,6 +161,7 @@ public class Battle : ScriptableObject {
             yield return intent.ResolveRoutine();
         }
 
+        yield return hero.ActionEndRoutine();
         hero.MarkActionTaken();
     }
 
@@ -161,5 +169,12 @@ public class Battle : ScriptableObject {
 
     public void Log(string message) {
         Global.Instance().UIEngine.DebugBox.text = message;
+    }
+
+    public void Log(string message, Dictionary<string, string> tokens) {
+        foreach (string key in tokens.Keys) {
+            message = message.Replace(key, tokens[key]);
+        }
+        Log(message);
     }
 }

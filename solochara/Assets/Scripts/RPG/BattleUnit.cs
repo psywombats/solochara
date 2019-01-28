@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 // representation of a unit in battle
@@ -9,6 +10,8 @@ public class BattleUnit {
     public Battle battle { get; private set; }
     public Alignment align { get { return unit.align; } }
     public bool hasActedThisTurn { get; private set; }
+
+    private List<StatusInstance> statuses;
 
     public Doll doll {
         get {
@@ -34,9 +37,31 @@ public class BattleUnit {
     }
 
     // called at the beginning of this unit's faction's turn
-    public void ResetForNewTurn() {
+    public IEnumerator TurnStartRoutine() {
         hasActedThisTurn = false;
         unit.stats.Set(StatTag.AP, Get(StatTag.MAP));
+        
+        foreach (StatusInstance status in statuses) {
+            yield return status.TurnStartRoutine();
+        }
+    }
+
+    public IEnumerator TurnEndRoutine() {
+        foreach (StatusInstance status in statuses) {
+            yield return status.TurnEndRoutine();
+        }
+    }
+
+    public IEnumerator ActionStartRoutine() {
+        foreach (StatusInstance status in statuses) {
+            yield return status.ActionStartRoutine();
+        }
+    }
+
+    public IEnumerator ActionEndRoutine() {
+        foreach (StatusInstance status in statuses) {
+            yield return status.ActionEndRoutine();
+        }
     }
 
     public IEnumerator TakeDamageRoutine(int damage) {
@@ -59,9 +84,39 @@ public class BattleUnit {
 
     public IEnumerator DeathRoutine() {
         battle.Log(this + " died");
-        yield return doll.GetComponent<AnimationPlayer>().PlayAnimationRoutine(doll.deathAnimation);
+        yield return doll.PlayAnimationRoutine(doll.deathAnimation);
         doll.appearance.sprite = null;
         yield return null;
+    }
+
+    // inflict power is a prerolled chance 0.0-1.0, we'll check against it
+    public IEnumerator TryInflictStatusRoutine(StatusEffect effect, float baseInflictPower) {
+        float resistance = 0.0f;
+        if (effect.resistanceStat != StatTag.None) {
+            resistance += Get(effect.resistanceStat);
+        }
+        if (baseInflictPower > resistance || Has(effect)) {
+            yield return InflictStatusRoutine(effect);
+        } else {
+            battle.Log(unit.unitName + " resisted.");
+            yield return CoUtils.Wait(0.7f);
+        }
+    }
+
+    public IEnumerator InflictStatusRoutine(StatusEffect effect) {
+        battle.Log(effect.inflictMessage, new Dictionary<string, string>() { ["$target"] = unit.unitName });
+        yield return doll.PlayAnimationRoutine(effect.inflictAnimation);
+        statuses.Add(new StatusInstance(effect, this));
+    }
+
+    public IEnumerator RemoveStatusRoutine(StatusEffect effect) {
+        battle.Log(effect.cureMessage, new Dictionary<string, string>() { ["$target"] = unit.unitName });
+        if (effect.cureAnimation != null) {
+            yield return doll.PlayAnimationRoutine(effect.cureAnimation);
+        } else {
+            yield return CoUtils.Wait(0.7f);
+        }
+        statuses = statuses.Where(status => status.effect != effect).ToList();
     }
 
     // === RPG =====================================================================================
@@ -72,6 +127,15 @@ public class BattleUnit {
 
     public bool Is(StatTag tag) {
         return unit.stats.Is(tag);
+    }
+
+    public bool Has(StatusEffect effect) {
+        foreach (StatusInstance status in this.statuses) {
+            if (status.effect == effect) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // checks for deadness and dead-like conditions like petrification

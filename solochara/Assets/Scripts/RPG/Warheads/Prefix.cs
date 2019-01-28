@@ -3,7 +3,15 @@ using System.Collections;
 
 public abstract class Prefix : AutoExpandingScriptableObject {
 
-    public abstract float ModifyHeal(WarheadHeal source, float heal);
+    public virtual float ModifyHeal(WarheadHeal source, float heal) {
+        return heal;
+    }
 
-    public abstract float ModifyDamage(WarheadDamage source, float damage);
+    public virtual float ModifyDamage(WarheadDamage source, float damage) {
+        return damage;
+    }
+
+    public virtual IEnumerator PostHitRoutine(BattleUnit caster, BattleUnit target) {
+        yield return null;
+    }
 }

@@ -45,9 +45,15 @@ public class BattleFaction {
     }
 
     // on start of a new turn, need to set some state on all units
-    public void ResetForNewTurn() {
+    public IEnumerator TurnStartRoutine() {
         foreach (BattleUnit unit in GetUnits()) {
-            unit.ResetForNewTurn();
+            yield return unit.TurnStartRoutine();
+        }
+    }
+
+    public IEnumerator TurnEndRoutine() {
+        foreach (BattleUnit unit in GetUnits()) {
+            yield return unit.TurnStartRoutine();
         }
     }
 

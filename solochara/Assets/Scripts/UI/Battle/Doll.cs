@@ -55,6 +55,10 @@ public class Doll : AnimationTarget {
         }
     }
 
+    public IEnumerator PlayAnimationRoutine(LuaAnimation animation) {
+        yield return GetComponent<AnimationPlayer>().PlayAnimationRoutine(animation);
+    }
+
     // === COMMAND HELPERS =========================================================================
 
     private Vector3 CalculateJumpOffset(Vector3 startPos, Vector3 endPos) {

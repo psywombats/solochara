@@ -48,6 +48,7 @@ public class Stat {
         AddStat(StatTag.STAGGER_OFF,    CombinationAdditive.Instance(), "StaggerOff");
         AddStat(StatTag.STAGGER_DEF,    CombinationAdditive.Instance(), "StaggerDef");
         AddStat(StatTag.STAGGER_PEN,    CombinationAdditive.Instance(), "StaggerPen");
+        AddStat(StatTag.POISON_DEF,     CombinationAdditive.Instance(), "PoisonResist");
     }
 
     private static void AddStat(StatTag tag, CombinationStrategy combinator, String nameShort, bool useBinaryEditor=false) {

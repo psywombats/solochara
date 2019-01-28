@@ -131,11 +131,14 @@
     <Compile Include="Assets\Scripts\RPG\Stat\Stat.cs" />
     <Compile Include="Assets\Scripts\RPG\Stat\StatSet.cs" />
     <Compile Include="Assets\Scripts\RPG\Stat\StatTag.cs" />
+    <Compile Include="Assets\Scripts\RPG\StatusEffect.cs" />
+    <Compile Include="Assets\Scripts\RPG\StatusInstance.cs" />
     <Compile Include="Assets\Scripts\RPG\TargetType.cs" />
     <Compile Include="Assets\Scripts\RPG\Unit.cs" />
     <Compile Include="Assets\Scripts\RPG\Warheads\Prefix.cs" />
     <Compile Include="Assets\Scripts\RPG\Warheads\PrefixBoost.cs" />
     <Compile Include="Assets\Scripts\RPG\Warheads\PrefixNothing.cs" />
+    <Compile Include="Assets\Scripts\RPG\Warheads\PrefixRiderStatus.cs" />
     <Compile Include="Assets\Scripts\RPG\Warheads\Warhead.cs" />
     <Compile Include="Assets\Scripts\RPG\Warheads\WarheadDamage.cs" />
     <Compile Include="Assets\Scripts\RPG\Warheads\WarheadHeal.cs" />
