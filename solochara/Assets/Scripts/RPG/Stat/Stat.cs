@@ -11,12 +11,12 @@ public class Stat {
 
     public CombinationStrategy combinator { get; private set; }
     public StatTag tag { get; private set; }
-    public String nameShort { get; private set; }
+    public string nameShort { get; private set; }
     public bool useBinaryEditor { get; private set; }
 
     private static Dictionary<StatTag, Stat> stats;
 
-    private Stat(StatTag tag, CombinationStrategy combinator, String nameShort, bool useBinaryEditor) {
+    private Stat(StatTag tag, CombinationStrategy combinator, string nameShort, bool useBinaryEditor) {
         this.combinator = combinator;
         this.tag = tag;
         this.nameShort = nameShort;
@@ -51,7 +51,7 @@ public class Stat {
         AddStat(StatTag.POISON_DEF,     CombinationAdditive.Instance(), "PoisonResist");
     }
 
-    private static void AddStat(StatTag tag, CombinationStrategy combinator, String nameShort, bool useBinaryEditor=false) {
+    private static void AddStat(StatTag tag, CombinationStrategy combinator, string nameShort, bool useBinaryEditor=false) {
         stats[tag] = new Stat(tag, combinator, nameShort, useBinaryEditor);
     }
 }

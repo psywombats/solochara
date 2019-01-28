@@ -19,6 +19,9 @@ public class WarheadHeal : Warhead {
                 heal = prefix.ModifyHeal(this, heal);
             }
             yield return target.HealRoutine((int)heal);
+            foreach (Prefix prefix in prefixes) {
+                yield return prefix.PostHealRoutine(actor, target);
+            }
         }
     }
 }

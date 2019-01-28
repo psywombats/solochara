@@ -19,6 +19,12 @@ public class BattleUnit {
         }
     }
 
+    public string name {
+        get {
+            return unit.unitName;
+        }
+    }
+
     // === INITIALIZATION ==========================================================================
 
     // we create battle units from three sources
@@ -27,6 +33,8 @@ public class BattleUnit {
     public BattleUnit(Unit unit, Battle battle) {
         this.unit = unit;
         this.battle = battle;
+
+        statuses = new List<StatusInstance>();
     }
 
     // === STATE MACHINE ===========================================================================
@@ -64,7 +72,7 @@ public class BattleUnit {
         }
     }
 
-    public IEnumerator TakeDamageRoutine(int damage) {
+    public IEnumerator TakeDamageRoutine(int damage, bool includeMessage = true) {
         battle.Log(this + " took " + damage + " damages");
         unit.stats.Sub(StatTag.HP, damage);
         yield return doll.damagePopup.ActivateRoutine(damage);
@@ -84,7 +92,7 @@ public class BattleUnit {
 
     public IEnumerator DeathRoutine() {
         battle.Log(this + " died");
-        yield return doll.PlayAnimationRoutine(doll.deathAnimation);
+        yield return PlayAnimationRoutine(doll.deathAnimation);
         doll.appearance.sprite = null;
         yield return null;
     }
@@ -98,21 +106,21 @@ public class BattleUnit {
         if (baseInflictPower > resistance || Has(effect)) {
             yield return InflictStatusRoutine(effect);
         } else {
-            battle.Log(unit.unitName + " resisted.");
+            battle.Log(name + " resisted.");
             yield return CoUtils.Wait(0.7f);
         }
     }
 
     public IEnumerator InflictStatusRoutine(StatusEffect effect) {
-        battle.Log(effect.inflictMessage, new Dictionary<string, string>() { ["$target"] = unit.unitName });
-        yield return doll.PlayAnimationRoutine(effect.inflictAnimation);
+        battle.Log(effect.inflictMessage, new Dictionary<string, string>() { ["$target"] = name });
+        yield return PlayAnimationRoutine(effect.inflictAnimation);
         statuses.Add(new StatusInstance(effect, this));
     }
 
     public IEnumerator RemoveStatusRoutine(StatusEffect effect) {
-        battle.Log(effect.cureMessage, new Dictionary<string, string>() { ["$target"] = unit.unitName });
+        battle.Log(effect.cureMessage, new Dictionary<string, string>() { ["$target"] = name });
         if (effect.cureAnimation != null) {
-            yield return doll.PlayAnimationRoutine(effect.cureAnimation);
+            yield return PlayAnimationRoutine(effect.cureAnimation);
         } else {
             yield return CoUtils.Wait(0.7f);
         }
@@ -144,6 +152,10 @@ public class BattleUnit {
     }
 
     // === MISC ====================================================================================
+
+    public IEnumerator PlayAnimationRoutine(LuaAnimation animation) {
+        yield return doll.PlayAnimationRoutine(animation);
+    }
 
     public override string ToString() {
         return unit.ToString();

@@ -139,13 +139,13 @@ public class Battle : ScriptableObject {
     private IEnumerator PlayHumanTurnRoutine() {
         BattleUnit hero = this.GetFaction(Alignment.Hero).GetUnits().First();
 
-        Result<List<Intent>> intentsResult = new Result<List<Intent>>();
-        yield return controller.SelectSpellsRoutine(intentsResult, hero);
-
         yield return hero.ActionStartRoutine();
         if (hero.IsDead()) {
             yield break;
         }
+
+        Result<List<Intent>> intentsResult = new Result<List<Intent>>();
+        yield return controller.SelectSpellsRoutine(intentsResult, hero);
 
         List<Intent> prefixBuffer = new List<Intent>();
         foreach (Intent intent in intentsResult.value) {

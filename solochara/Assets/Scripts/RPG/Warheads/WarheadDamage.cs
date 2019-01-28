@@ -19,6 +19,11 @@ public class WarheadDamage : Warhead {
                 damage = prefix.ModifyDamage(this, damage);
             }
             yield return target.TakeDamageRoutine((int)damage);
+            if (!target.IsDead()) {
+                foreach (Prefix prefix in prefixes) {
+                    yield return prefix.PostHitRoutine(actor, target);
+                }
+            }
         }
     }
 }

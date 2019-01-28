@@ -11,7 +11,11 @@ public abstract class Prefix : AutoExpandingScriptableObject {
         return damage;
     }
 
-    public virtual IEnumerator PostHitRoutine(BattleUnit caster, BattleUnit target) {
+    public virtual IEnumerator PostHitRoutine(BattleUnit actor, BattleUnit target) {
+        yield return null;
+    }
+
+    public virtual IEnumerator PostHealRoutine(BattleUnit actor, BattleUnit target) {
         yield return null;
     }
 }

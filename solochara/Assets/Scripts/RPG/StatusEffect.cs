@@ -6,7 +6,7 @@ using System;
 [CreateAssetMenu(fileName = "StatusEffect", menuName = "Data/RPG/StatusEffect")]
 public class StatusEffect : ScriptableObject {
 
-    public enum ExpiryTiming {
+    public enum TurnTiming {
         AfterAction,
         BeforeAction,
         AfterTurn,
@@ -35,11 +35,11 @@ public class StatusEffect : ScriptableObject {
     [Tooltip("Duration in turns, or 0 for never expires")]
     public int duration;
     [Tooltip("'Action' would be when the enemy makes its move, 'turn' would be when all enemies begin attacking, etc")]
-    public ExpiryTiming expiryTiming = ExpiryTiming.AfterTurn;
+    public TurnTiming expiryTiming = TurnTiming.AfterTurn;
 
-    [Space]
-    [Header("Flags")]
-    public bool preventsAction;
+    //[Space]
+    //[Header("Flags")]
+    //public bool preventsAction;
 
     [Space]
     [Header("Damage over time")]
@@ -52,4 +52,6 @@ public class StatusEffect : ScriptableObject {
     public float percentMaxDamagePerTurn;
     [Tooltip("Percent 0.0 - 1.0, a monster with 50/100 and .1 here would take 5 damage a turn")]
     public float percentCurrentDamagePerTurn;
+    [Tooltip("When is the DOT inflicted?")]
+    public TurnTiming dotTiming = TurnTiming.BeforeTurn;
 }

@@ -24,7 +24,9 @@ public class StatSet : ISerializationCallbackReceiver {
     private void InitNewSet() {
         stats = new Dictionary<StatTag, float>();
         foreach (StatTag tag in Enum.GetValues(typeof(StatTag))) {
-            stats[tag] = Stat.Get(tag).combinator.Zero();
+            if (tag != StatTag.None) {
+                stats[tag] = Stat.Get(tag).combinator.Zero();
+            }
         }
     }
 
