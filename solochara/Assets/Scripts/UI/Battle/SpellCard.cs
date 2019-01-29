@@ -2,11 +2,10 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class SpellCard : Selectable {
+public class SpellCard : SpellSelectable {
 
     public Text skillName;
     public APMeter apMeter;
-    public DirectionArrow arrow;
 
     public Spell spell { get; private set; }
 

@@ -30,9 +30,4 @@ public class DirectionArrow : MonoBehaviour {
         float radians = Mathf.Atan2(direction.Y(), -direction.X());
         image.rectTransform.localEulerAngles = new Vector3(0.0f, 0.0f, radians / (2.0f * Mathf.PI) * 360.0f + angleOffset);
     }
-
-    public void SetDirection(EightDir direction) {
-        this.direction = direction;
-        OnValidate();
-    }
 }

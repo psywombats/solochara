@@ -165,6 +165,7 @@
     <Compile Include="Assets\Scripts\UI\Battle\Selectable.cs" />
     <Compile Include="Assets\Scripts\UI\Battle\SpellCard.cs" />
     <Compile Include="Assets\Scripts\UI\Battle\SpellLinkMeter.cs" />
+    <Compile Include="Assets\Scripts\UI\Battle\SpellSelectable.cs" />
     <Compile Include="Assets\Scripts\UI\Battle\SpellSelector.cs" />
     <Compile Include="Assets\Scripts\UI\DropshadowedImage.cs" />
     <Compile Include="Assets\Scripts\UI\UIEngine.cs" />

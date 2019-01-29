@@ -7,6 +7,7 @@ using UnityEditor;
 public class DropshadowedImage : MonoBehaviour {
 
     public Vector3 offset = new Vector3(0, -1, 0);
+    public GameObject shadowedObject;
 
     public Image primaryImage {
         get {
@@ -20,12 +21,12 @@ public class DropshadowedImage : MonoBehaviour {
         }
     }
 
-    public GameObject shadowedObject;
-
     public void OnValidate() {
         secondaryImage.sprite = primaryImage.sprite;
         secondaryImage.color = Color.black;
-        secondaryImage.rectTransform.localPosition = offset;
         secondaryImage.rectTransform.sizeDelta = primaryImage.rectTransform.sizeDelta;
+        secondaryImage.rectTransform.rotation = primaryImage.rectTransform.rotation;
+        secondaryImage.rectTransform.localPosition = primaryImage.rectTransform.localPosition + offset;
+
     }
 }
