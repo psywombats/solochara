@@ -113,7 +113,8 @@ public class GroupSelector : MonoBehaviour, InputListener {
 
     private void StartSingle(Result<BattleUnit> result) {
         awaitingResult = result;
-        selectionIndex = 0;
+        selectionIndex = -1;
+        MoveSelection(1);
         GetSelectedDoll().GetComponent<Selectable>().selected = true;
         Global.Instance().Input.PushListener(this);
     }
@@ -147,20 +148,25 @@ public class GroupSelector : MonoBehaviour, InputListener {
     }
 
     private Doll GetSelectedDoll() {
+        if (selectionIndex == -1) return null;
         return dolls[selectionIndex];
     }
 
     private void MoveSelection(int delta) {
         Doll oldSelected = GetSelectedDoll();
-        oldSelected.GetComponent<Selectable>().selected = false;
-
-        selectionIndex += delta;
-        int max = dolls.Count;
-        if (selectionIndex < 0) {
-            selectionIndex = max - 1;
-        } else if (selectionIndex >= max) {
-            selectionIndex = 0;
+        if (oldSelected != null) {
+            oldSelected.GetComponent<Selectable>().selected = false;
         }
+
+        int max = dolls.Count;
+        do {
+            selectionIndex += delta;
+            if (selectionIndex < 0) {
+                selectionIndex = max - 1;
+            } else if (selectionIndex >= max) {
+                selectionIndex = 0;
+            }
+        } while (GetSelectedDoll().unit.IsDead());
 
         Doll newSelected = GetSelectedDoll();
         newSelected.GetComponent<Selectable>().selected = true;
