@@ -135,10 +135,10 @@ public class GroupSelector : MonoBehaviour, InputListener {
     }
 
     private void EndMulti(Result<List<BattleUnit>> result) {
-        result.value = new List<BattleUnit>();
         if (canceledConfirm) {
             result.Cancel();
         } else {
+            result.value = new List<BattleUnit>();
             foreach (Doll doll in dolls) {
                 doll.GetComponent<Selectable>().selected = false;
                 result.value.Add(doll.unit);

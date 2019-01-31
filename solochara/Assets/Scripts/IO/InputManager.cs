@@ -77,9 +77,9 @@ public class InputManager : MonoBehaviour {
                 continue;
             }
 
-            bool endProcessing = false; // ew.
-            foreach (Command command in System.Enum.GetValues(typeof(Command))) {
+            foreach (Command command in Enum.GetValues(typeof(Command))) {
                 foreach (KeyCode code in keybinds[command]) {
+                    bool endProcessing = false;
                     if (Input.GetKeyDown(code)) {
                         endProcessing |= listener.OnCommand(command, Event.Down);
                     }
@@ -98,9 +98,7 @@ public class InputManager : MonoBehaviour {
                     }
                     if (endProcessing) break;
                 }
-                if (endProcessing) break;
             }
-            if (endProcessing) break;
         }
     }
 

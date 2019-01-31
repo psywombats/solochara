@@ -25,7 +25,6 @@ public class SpellSelector : MonoBehaviour, InputListener {
     public bool OnCommand(InputManager.Command command, InputManager.Event eventType) {
         switch (eventType) {
             case InputManager.Event.Down:
-                Debug.Log(command + " " + eventType);
                 switch (command) {
                     case InputManager.Command.Cancel:
                         awaitingResult.Cancel();
@@ -48,7 +47,6 @@ public class SpellSelector : MonoBehaviour, InputListener {
                 }
                 break;
             case InputManager.Event.Up:
-                Debug.Log(command + " " + eventType);
                 switch (command) {
                     case InputManager.Command.Down:
                         RemoveKey(OrthoDir.South);
@@ -112,12 +110,17 @@ public class SpellSelector : MonoBehaviour, InputListener {
 
     private void RemoveKey(OrthoDir dir) {
         if (downButtons.Contains(dir)) {
-            foreach (SpellCard card in cards.Values) {
-                if (card.selected) {
-                    awaitingResult.value = card;
-                }
-            }
+            // downButtons.Remove(dir);
             downButtons.Clear();
+            if (downButtons.Count == 0) {
+                foreach (SpellCard card in cards.Values) {
+                    if (card.selected) {
+                        awaitingResult.value = card;
+                    }
+                }
+            } else {
+                UpdateHighlight();
+            }
         }
     }
 
