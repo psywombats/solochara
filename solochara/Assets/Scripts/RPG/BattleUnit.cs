@@ -35,6 +35,10 @@ public class BattleUnit {
         this.battle = battle;
 
         statuses = new List<StatusInstance>();
+
+        if (align == Alignment.Hero) {
+            battle.controller.playerHP.Populate(Get(StatTag.MHP), Get(StatTag.HP));
+        }
     }
 
     // === STATE MACHINE ===========================================================================
@@ -76,7 +80,15 @@ public class BattleUnit {
         battle.Log(this + " took " + damage + " damages");
         unit.stats.Sub(StatTag.HP, damage);
         yield return doll.damagePopup.ActivateRoutine(damage);
-        yield return CoUtils.Wait(0.7f);
+        if (align == Alignment.Hero) {
+            yield return CoUtils.RunParallel(new IEnumerator[] {
+                battle.controller.playerHP.AnimateWithSpeedRoutine(Get(StatTag.MHP), Get(StatTag.HP), 10),
+                CoUtils.Wait(0.4f),
+        }, battle.controller);
+            yield return CoUtils.Wait(0.3f);
+        } else {
+            yield return CoUtils.Wait(0.7f);
+        }
         yield return doll.damagePopup.DeactivateRoutine();
         if (IsDead()) {
             yield return DeathRoutine();

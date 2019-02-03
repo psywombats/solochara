@@ -95,7 +95,7 @@ public class SpellSelector : MonoBehaviour, InputListener {
     }
 
     public IEnumerator SelectSpellRoutine(Result<Selectable> result, List<Spell> previous) {
-        this.awaitingResult = result;
+        awaitingResult = result;
         UpdateHighlight();
         while (!awaitingResult.finished) {
             yield return null;

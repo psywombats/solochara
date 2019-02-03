@@ -9,11 +9,12 @@ public class SliderBar : MonoBehaviour {
     public int inset = 16;
     public float ratio = 0.5f;
 
-    public void Update() {
+    public void OnValidate() {
         UpdateScale();
     }
 
-    public void OnValidate() {
+    public void Populate(float max, float actual) {
+        ratio = actual / max;
         UpdateScale();
     }
 

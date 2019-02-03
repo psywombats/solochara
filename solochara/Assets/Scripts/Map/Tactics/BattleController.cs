@@ -22,6 +22,7 @@ public class BattleController : MonoBehaviour {
     public GroupSelector allSelect;
     public BattleAnimationPlayer animator;
     public SpellLinkMeter linker;
+    public NumericalBar playerHP;
 
     // internal state
     private Dictionary<BattleUnit, Doll> dolls;
@@ -34,7 +35,7 @@ public class BattleController : MonoBehaviour {
 
     // this should take a battle memory at some point
     public void Setup(string battleKey) {
-        this.battle = Resources.Load<Battle>("Database/Battles/" + battleKey);
+        battle = Resources.Load<Battle>("Database/Battles/" + battleKey);
         Debug.Assert(this.battle != null, "Unknown battle key " + battleKey);
     }
 
@@ -47,18 +48,18 @@ public class BattleController : MonoBehaviour {
     // === STATE MACHINE ===========================================================================
 
     public IEnumerator StartBattleRoutine() {
-        this.battle.SetUpWithController(this);
+        battle.SetUpWithController(this);
 
-        foreach (BattleUnit unit in this.battle.UnitsByAlignment(Alignment.Enemy)) {
-            Doll doll = this.enemySelect.AssignNextDoll(unit);
+        foreach (BattleUnit unit in battle.UnitsByAlignment(Alignment.Enemy)) {
+            Doll doll = enemySelect.AssignNextDoll(unit);
             dolls[unit] = doll;
         }
-        foreach (BattleUnit unit in this.battle.UnitsByAlignment(Alignment.Hero)) {
-            Doll doll = this.allySelect.AssignNextDoll(unit);
+        foreach (BattleUnit unit in battle.UnitsByAlignment(Alignment.Hero)) {
+            Doll doll = allySelect.AssignNextDoll(unit);
             dolls[unit] = doll;
         }
         
-        yield return this.battle.BattleRoutine();
+        yield return battle.BattleRoutine();
     }
 
     public IEnumerator TurnBeginAnimationRoutine(Alignment align) {
