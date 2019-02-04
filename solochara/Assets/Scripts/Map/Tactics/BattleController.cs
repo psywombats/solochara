@@ -23,6 +23,7 @@ public class BattleController : MonoBehaviour {
     public BattleAnimationPlayer animator;
     public SpellLinkMeter linker;
     public NumericalBar playerHP;
+    public EnemyHUD enemyHUD;
 
     // internal state
     private Dictionary<BattleUnit, Doll> dolls;
@@ -36,7 +37,7 @@ public class BattleController : MonoBehaviour {
     // this should take a battle memory at some point
     public void Setup(string battleKey) {
         battle = Resources.Load<Battle>("Database/Battles/" + battleKey);
-        Debug.Assert(this.battle != null, "Unknown battle key " + battleKey);
+        Debug.Assert(battle != null, "Unknown battle key " + battleKey);
     }
 
     // === GETTERS AND BOOKKEEPING =================================================================
@@ -67,12 +68,7 @@ public class BattleController : MonoBehaviour {
     }
 
     public IEnumerator TurnEndAnimationRoutine(Alignment align) {
-        List<IEnumerator> routinesToRun = new List<IEnumerator>();
-        foreach (BattleUnit unit in battle.UnitsByAlignment(align)) {
-            // TODO: new project
-            //routinesToRun.Add(unit.doll.PostTurnRoutine());
-        }
-        yield return CoUtils.RunParallel(routinesToRun.ToArray(), this);
+        yield return enemyHUD.disableRoutine();
     }
     
     public IEnumerator SelectSpellsRoutine(Result<List<Intent>> result, BattleUnit hero) {

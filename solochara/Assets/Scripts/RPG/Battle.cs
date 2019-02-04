@@ -137,7 +137,7 @@ public class Battle : ScriptableObject {
     }
 
     private IEnumerator PlayHumanTurnRoutine() {
-        BattleUnit hero = this.GetFaction(Alignment.Hero).GetUnits().First();
+        BattleUnit hero = GetFaction(Alignment.Hero).GetUnits().First();
 
         yield return hero.ActionStartRoutine();
         if (hero.IsDead()) {

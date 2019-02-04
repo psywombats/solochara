@@ -6,7 +6,7 @@ public class GroupSelector : MonoBehaviour, InputListener {
 
     // to be set in editor
     public List<Doll> dolls;
-
+    
     private Result<BattleUnit> awaitingResult;
     private int selectionIndex;
     private int dollFillIndex = 0;
@@ -75,7 +75,7 @@ public class GroupSelector : MonoBehaviour, InputListener {
         while (!awaitingResult.finished) {
             yield return null;
         }
-        EndSingle();
+        yield return EndSingle();
     }
 
     public IEnumerator SelectAnyExceptRoutine(Result<BattleUnit> result, Intent intent) {
@@ -108,7 +108,7 @@ public class GroupSelector : MonoBehaviour, InputListener {
         } else {
             result.Cancel();
         }
-        EndSingle();
+        yield return EndSingle();
     }
 
     private void StartSingle(Result<BattleUnit> result) {
@@ -119,10 +119,11 @@ public class GroupSelector : MonoBehaviour, InputListener {
         Global.Instance().Input.PushListener(this);
     }
 
-    private void EndSingle() {
+    private IEnumerator EndSingle() {
         awaitingResult = null;
         GetSelectedDoll().GetComponent<Selectable>().selected = false;
         Global.Instance().Input.RemoveListener(this);
+        yield return StartCoroutine(GetSelectedDoll().unit.battle.controller.enemyHUD.disableRoutine());
     }
 
     private void StartMulti() {
@@ -170,6 +171,9 @@ public class GroupSelector : MonoBehaviour, InputListener {
 
         Doll newSelected = GetSelectedDoll();
         newSelected.GetComponent<Selectable>().selected = true;
+        if (newSelected.unit.align == Alignment.Enemy) {
+            StartCoroutine(newSelected.unit.battle.controller.enemyHUD.enableRoutine(newSelected.unit));
+        }
 
         if (oldSelected != newSelected) {
             Global.Instance().Audio.PlaySFX("cursor");

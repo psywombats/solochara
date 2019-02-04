@@ -68,6 +68,9 @@ public class BattleUnit {
         foreach (StatusInstance status in statuses) {
             yield return status.ActionStartRoutine();
         }
+        if (align == Alignment.Enemy) {
+            yield return battle.controller.enemyHUD.enableRoutine(this);
+        }
     }
 
     public IEnumerator ActionEndRoutine() {
@@ -78,16 +81,24 @@ public class BattleUnit {
 
     public IEnumerator TakeDamageRoutine(int damage, bool includeMessage = true) {
         battle.Log(this + " took " + damage + " damages");
-        unit.stats.Sub(StatTag.HP, damage);
-        yield return doll.damagePopup.ActivateRoutine(damage);
         if (align == Alignment.Hero) {
+            unit.stats.Sub(StatTag.HP, damage);
             yield return CoUtils.RunParallel(new IEnumerator[] {
-                battle.controller.playerHP.AnimateWithSpeedRoutine(Get(StatTag.MHP), Get(StatTag.HP), 10),
-                CoUtils.Wait(0.4f),
-        }, battle.controller);
+                        doll.damagePopup.ActivateRoutine(damage),
+                        battle.controller.playerHP.AnimateWithSpeedRoutine(Get(StatTag.MHP), Get(StatTag.HP)),
+                        CoUtils.Wait(0.4f),
+                    }, battle.controller);
             yield return CoUtils.Wait(0.3f);
         } else {
-            yield return CoUtils.Wait(0.7f);
+            yield return battle.controller.enemyHUD.enableRoutine(this);
+            unit.stats.Sub(StatTag.HP, damage);
+            yield return CoUtils.RunParallel(new IEnumerator[] {
+                        doll.damagePopup.ActivateRoutine(damage),
+                        battle.controller.enemyHUD.hpBar.AnimateWithSpeedRoutine(Get(StatTag.HP) / Get(StatTag.MHP)),
+                        CoUtils.Wait(0.4f),
+                    }, battle.controller);
+            yield return CoUtils.Wait(0.3f);
+            yield return battle.controller.enemyHUD.disableRoutine();
         }
         yield return doll.damagePopup.DeactivateRoutine();
         if (IsDead()) {

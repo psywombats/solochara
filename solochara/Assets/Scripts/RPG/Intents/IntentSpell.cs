@@ -14,9 +14,12 @@ public class IntentSpell : Intent {
     }
 
     public override IEnumerator ResolveRoutine() {
-        if (!this.actor.IsDead()) {
+        if (!actor.IsDead()) {
             battle.Log(actor + " uses " + spell.spellName);
-            yield return CoUtils.Wait(0.5f);
+            if (targets.Count == 1 && targets[0].align == Alignment.Enemy) {
+                yield return battle.controller.enemyHUD.enableRoutine(targets[0]);
+            }
+            yield return CoUtils.Wait(0.4f);
             yield return spell.ResolveRoutine(this, prefixes);
         }
     }
@@ -49,6 +52,6 @@ public class IntentSpell : Intent {
     }
 
     public void AddPrefix(PrefixSpell prefix) {
-        this.prefixes.Add(prefix);
+        prefixes.Add(prefix);
     }
 }

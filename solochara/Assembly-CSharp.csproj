@@ -160,6 +160,7 @@
     <Compile Include="Assets\Scripts\UI\Battle\DamagePopupDigit.cs" />
     <Compile Include="Assets\Scripts\UI\Battle\DirectionArrow.cs" />
     <Compile Include="Assets\Scripts\UI\Battle\Doll.cs" />
+    <Compile Include="Assets\Scripts\UI\Battle\EnemyHUD.cs" />
     <Compile Include="Assets\Scripts\UI\Battle\GroupSelector.cs" />
     <Compile Include="Assets\Scripts\UI\Battle\NumericalBar.cs" />
     <Compile Include="Assets\Scripts\UI\Battle\Pip.cs" />

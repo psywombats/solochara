@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class NumericalBar : MonoBehaviour {
 
@@ -15,26 +16,23 @@ public class NumericalBar : MonoBehaviour {
     public void Populate(float max, float actual) {
         this.max.text = ((int)max).ToString();
         this.actual.text = ((int)actual).ToString();
-        this.bar.Populate(max, actual);
-        this.currentValue = actual;
+        bar.Populate(max, actual);
+        currentValue = actual;
     }
 
     public IEnumerator AnimateWithTimeRoutine(float max, float actual, float duration) {
-        yield return AnimateWithTimeRoutine(max, actual, (max - actual) / duration);
+        Tweener tween = DOTween.To(() => currentValue, (float x) => {
+            currentValue = x;
+            this.actual.text = x.ToString();
+        }, currentValue, duration);
+        yield return CoUtils.RunParallel(new IEnumerator[] {
+            CoUtils.RunTween(tween),
+            bar.AnimateWithTimeRoutine(Mathf.Max(Mathf.Min(actual, max), 0.0f) / max, duration),
+        }, this);
     }
 
     public IEnumerator AnimateWithSpeedRoutine(float max, float actual, float unitsPerSecond = 0.0f) {
-        float rate = unitsPerSecond == 0.0f ? defaultSpeed : unitsPerSecond;
-        float sign = currentValue < actual ? 1 : -1;
-        while (currentValue != actual) {
-            currentValue += sign * unitsPerSecond * Time.deltaTime;
-            if (sign > 0 && currentValue > actual) {
-                currentValue = actual;
-            } else if (sign < 0 && currentValue < actual) {
-                currentValue = actual;
-            }
-            Populate(max, currentValue);
-            yield return null;
-        }
+        float speed = unitsPerSecond > 0 ? unitsPerSecond : defaultSpeed;
+        yield return AnimateWithTimeRoutine(max, actual, Mathf.Abs(currentValue - actual) / speed);
     }
 }
