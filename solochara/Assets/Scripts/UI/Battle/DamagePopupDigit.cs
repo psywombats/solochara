@@ -15,7 +15,10 @@ public class DamagePopupDigit : MonoBehaviour {
     }
 
     public void Start() {
-        Color c = GetComponent<SpriteRenderer>().color;
+        SetColor(GetComponent<SpriteRenderer>().color);
+    }
+
+    public void SetColor(Color c) {
         GetComponent<SpriteRenderer>().color = new Color(c.r, c.g, c.b, 0.0f);
     }
 

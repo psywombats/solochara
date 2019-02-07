@@ -11,6 +11,10 @@ public abstract class Prefix : AutoExpandingScriptableObject {
         return damage;
     }
 
+    public virtual float ModifyStagger(WarheadStagger source, float stagger) {
+        return stagger;
+    }
+
     public virtual IEnumerator PostHitRoutine(BattleUnit actor, BattleUnit target) {
         yield return null;
     }

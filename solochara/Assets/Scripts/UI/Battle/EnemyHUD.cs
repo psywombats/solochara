@@ -7,6 +7,7 @@ using DG.Tweening;
 public class EnemyHUD : MonoBehaviour {
 
     public SliderBar hpBar;
+    public SliderBar stagger;
     public Text text;
     public float fadeTime = 0.1f;
 

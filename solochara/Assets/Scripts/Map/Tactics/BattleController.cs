@@ -23,6 +23,7 @@ public class BattleController : MonoBehaviour {
     public BattleAnimationPlayer animator;
     public SpellLinkMeter linker;
     public NumericalBar playerHP;
+    public SliderBar playerStagger;
     public EnemyHUD enemyHUD;
 
     // internal state

@@ -14,6 +14,12 @@ public class StatusInstance {
         this.unit = unit;
     }
 
+    public float ModifyDamage(float baseDamage) {
+        return baseDamage * effect.incomingDamageModifierPercent;
+    }
+
+    // === COROUTINES ==============================================================================
+
     public virtual IEnumerator ActionStartRoutine() {
         if (effect.expiryTiming == StatusEffect.TurnTiming.BeforeAction) {
             yield return DecrementRoutine();

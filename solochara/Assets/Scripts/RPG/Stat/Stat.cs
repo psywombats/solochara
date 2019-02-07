@@ -24,7 +24,7 @@ public class Stat {
     }
 
     public static Stat Get(StatTag tag) {
-        if (stats == null) {
+        if (stats == null || !stats.ContainsKey(tag)) {
             InitializeStats();
         }
         return stats[tag];
@@ -43,15 +43,19 @@ public class Stat {
         AddStat(StatTag.MAG,            CombinationAdditive.Instance(), "MAG");
         AddStat(StatTag.DEF,            CombinationAdditive.Instance(), "DEF");
         AddStat(StatTag.RES,            CombinationAdditive.Instance(), "RES");
+        AddStat(StatTag.PEN,            CombinationAdditive.Instance(), "PEN");
         AddStat(StatTag.HEAL,           CombinationAdditive.Instance(), "Heal %");
         AddStat(StatTag.EVADE,          CombinationAdditive.Instance(), "Evade %");
-        AddStat(StatTag.STAGGER_OFF,    CombinationAdditive.Instance(), "StaggerOff");
+        AddStat(StatTag.STAGGER,        CombinationAdditive.Instance(), "Stagger");
+        AddStat(StatTag.STAGGER_ATK,    CombinationAdditive.Instance(), "StaggerAtk");
         AddStat(StatTag.STAGGER_DEF,    CombinationAdditive.Instance(), "StaggerDef");
         AddStat(StatTag.STAGGER_PEN,    CombinationAdditive.Instance(), "StaggerPen");
         AddStat(StatTag.POISON_DEF,     CombinationAdditive.Instance(), "PoisonResist");
     }
 
     private static void AddStat(StatTag tag, CombinationStrategy combinator, string nameShort, bool useBinaryEditor=false) {
-        stats[tag] = new Stat(tag, combinator, nameShort, useBinaryEditor);
+        if (!stats.ContainsKey(tag)) {
+            stats[tag] = new Stat(tag, combinator, nameShort, useBinaryEditor);
+        }
     }
 }

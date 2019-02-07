@@ -11,15 +11,18 @@ public enum StatTag {
     MAP,
     AP,
 
+    STAGGER,
+    STAGGER_ATK,
+    STAGGER_DEF,
+    STAGGER_PEN,
+
     MAG,
     DEF,
     RES,
+    PEN,
 
     HEAL,
     EVADE,
-    STAGGER_OFF,
-    STAGGER_DEF,
-    STAGGER_PEN,
 
     POISON_DEF,
 }

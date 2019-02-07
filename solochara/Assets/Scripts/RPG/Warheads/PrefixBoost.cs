@@ -12,4 +12,8 @@ public class PrefixBoost : Prefix {
     public override float ModifyHeal(WarheadHeal source, float heal) {
         return source.boostInfluence * effectiveness * heal;
     }
+
+    public override float ModifyStagger(WarheadStagger source, float stagger) {
+        return source.boostInfluence * effectiveness * stagger;
+    }
 }

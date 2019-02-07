@@ -54,4 +54,8 @@ public class StatusEffect : ScriptableObject {
     public float percentCurrentDamagePerTurn;
     [Tooltip("When is the DOT inflicted?")]
     public TurnTiming dotTiming = TurnTiming.BeforeTurn;
+
+    [Space]
+    [Header("Percent 0.0 - 1.0, will take this percent of incoming damage (2.0 doubles, 0.0 immune)")]
+    public float incomingDamageModifierPercent = 1.0f;
 }

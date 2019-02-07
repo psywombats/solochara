@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class WarheadDamage : Warhead {
+public class WarheadStagger : Warhead {
 
-    public int damageLow;
-    public int damageHigh;
+    public int staggerLow;
+    public int staggerHigh;
 
     [Tooltip("Final damage will be multiplied by this amount if a boosting prefix is cast (usually 2.0 for 1 AP)")]
     public float boostInfluence;
@@ -14,14 +14,11 @@ public class WarheadDamage : Warhead {
             yield return animator.PlayAnimationRoutine(anim, actor.doll, target.doll);
         }
         foreach (BattleUnit target in GetLivingTargets()) {
-            float damage = Range(damageLow, damageHigh);
+            float stagger = Range(staggerLow, staggerHigh);
             foreach (Prefix prefix in prefixes) {
-                damage = prefix.ModifyDamage(this, damage);
+                stagger = prefix.ModifyStagger(this, stagger);
             }
-            foreach (StatusInstance status in target.statuses) {
-                damage = status.ModifyDamage(damage);
-            }
-            yield return target.TakeDamageRoutine((int)damage);
+            yield return target.TakeStaggerRoutine(stagger);
             if (!target.IsDead()) {
                 foreach (Prefix prefix in prefixes) {
                     yield return prefix.PostHitRoutine(actor, target);

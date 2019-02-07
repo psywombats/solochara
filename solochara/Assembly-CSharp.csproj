@@ -144,6 +144,7 @@
     <Compile Include="Assets\Scripts\RPG\Warheads\WarheadDamage.cs" />
     <Compile Include="Assets\Scripts\RPG\Warheads\WarheadHeal.cs" />
     <Compile Include="Assets\Scripts\RPG\Warheads\WarheadNothing.cs" />
+    <Compile Include="Assets\Scripts\RPG\Warheads\WarheadStagger.cs" />
     <Compile Include="Assets\Scripts\Serialization\Memory.cs" />
     <Compile Include="Assets\Scripts\Serialization\MemoryManager.cs" />
     <Compile Include="Assets\Scripts\Serialization\MemoryPopulater.cs" />
