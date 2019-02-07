@@ -33,7 +33,7 @@ public class SliderBar : MonoBehaviour {
         Tweener tween = DOTween.To(() => ratio, (float x) => {
             ratio = x;
             UpdateScale();
-        }, Mathf.Max(Mathf.Min(target, 1.0f), 0.0f), duration);
+        }, Mathf.Max(Mathf.Min(1.0f, target), 0.0f), duration);
         yield return CoUtils.RunTween(tween);
     }
 

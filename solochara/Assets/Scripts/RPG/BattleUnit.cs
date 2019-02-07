@@ -6,7 +6,7 @@ using UnityEngine;
 // representation of a unit in battle
 public class BattleUnit {
 
-    private readonly float MaxStagger = 10.0f;
+    public static readonly float MaxStagger = 100.0f;
 
     public Unit unit { get; private set; }
     public Battle battle { get; private set; }
@@ -37,6 +37,7 @@ public class BattleUnit {
         this.battle = battle;
 
         statuses = new List<StatusInstance>();
+        unit.stats.Set(StatTag.STAGGER, MaxStagger);
 
         if (align == Alignment.Hero) {
             battle.controller.playerHP.Populate(Get(StatTag.MHP), Get(StatTag.HP));
@@ -53,8 +54,14 @@ public class BattleUnit {
     // called at the beginning of this unit's faction's turn
     public IEnumerator TurnStartRoutine() {
         hasActedThisTurn = false;
+
+        if (align == Alignment.Hero) {
+            battle.controller.StartCoroutine(battle.controller.playerStagger.AnimateWithSpeedRoutine(1.0f));
+        }
+
         unit.stats.Set(StatTag.AP, Get(StatTag.MAP));
-        
+        unit.stats.Set(StatTag.STAGGER, MaxStagger);
+
         foreach (StatusInstance status in statuses) {
             yield return status.TurnStartRoutine();
         }
@@ -109,12 +116,16 @@ public class BattleUnit {
     }
 
     public IEnumerator TakeStaggerRoutine(float stagger) {
-        battle.Log(this + " staggered by " + stagger + " staggerdamagers.");
+        if (IsStaggered()) {
+            yield return CoUtils.Wait(0.3f);
+            yield break;
+        }
+        battle.Log(this + " staggered by " + stagger + "%.");
         if (align == Alignment.Hero) {
             unit.stats.Sub(StatTag.STAGGER, stagger);
             yield return CoUtils.RunParallel(new IEnumerator[] {
                         doll.damagePopup.StaggerDamageRoutine((int)stagger),
-                        battle.controller.playerStagger.AnimateWithSpeedRoutine(MaxStagger, Get(StatTag.STAGGER)),
+                        battle.controller.playerStagger.AnimateWithSpeedRoutine(Get(StatTag.STAGGER) / MaxStagger),
                         CoUtils.Wait(0.4f),
                     }, battle.controller);
             yield return CoUtils.Wait(0.3f);
@@ -123,13 +134,17 @@ public class BattleUnit {
             unit.stats.Sub(StatTag.STAGGER, stagger);
             yield return CoUtils.RunParallel(new IEnumerator[] {
                         doll.damagePopup.StaggerDamageRoutine((int)stagger),
-                        battle.controller.enemyHUD.stagger.AnimateWithSpeedRoutine(MaxStagger / Get(StatTag.STAGGER)),
+                        battle.controller.enemyHUD.stagger.AnimateWithSpeedRoutine(Get(StatTag.STAGGER) / MaxStagger),
                         CoUtils.Wait(0.4f),
                     }, battle.controller);
             yield return CoUtils.Wait(0.3f);
             yield return battle.controller.enemyHUD.disableRoutine();
         }
         yield return doll.damagePopup.DeactivateRoutine();
+
+        if (IsStaggered()) {
+            yield return InflictStatusRoutine(GetStaggerEffect());
+        }
     }
 
     public IEnumerator HealRoutine(int heal) {
@@ -186,8 +201,12 @@ public class BattleUnit {
         return unit.stats.Is(tag);
     }
 
+    public bool IsStaggered() {
+        return unit.stats.Get(StatTag.STAGGER) <= 0;
+    }
+
     public bool Has(StatusEffect effect) {
-        foreach (StatusInstance status in this.statuses) {
+        foreach (StatusInstance status in statuses) {
             if (status.effect == effect) {
                 return true;
             }
@@ -208,5 +227,9 @@ public class BattleUnit {
 
     public override string ToString() {
         return unit.ToString();
+    }
+
+    private StatusEffect GetStaggerEffect() {
+        return Resources.Load<StatusEffect>("Database/StatusEffects/stagger");
     }
 }

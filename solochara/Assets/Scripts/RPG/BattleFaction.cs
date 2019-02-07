@@ -29,14 +29,13 @@ public class BattleFaction {
 
     // check if loss conditions are met, can vary battle to battle?
     public bool HasLost() {
-        return false;
-        //// just a deadness check for now
-        //foreach (BattleUnit unit in GetUnits()) {
-        //    if (unit.IsDead()) {
-        //        return false;
-        //    }
-        //}
-        //return true;
+        // just a deadness check for now
+        foreach (BattleUnit unit in GetUnits()) {
+            if (unit.IsDead()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     // check if any units in this faction have yet to act in the current turn context
@@ -47,13 +46,17 @@ public class BattleFaction {
     // on start of a new turn, need to set some state on all units
     public IEnumerator TurnStartRoutine() {
         foreach (BattleUnit unit in GetUnits()) {
-            yield return unit.TurnStartRoutine();
+            if (!unit.IsDead()) {
+                yield return unit.TurnStartRoutine();
+            }
         }
     }
 
     public IEnumerator TurnEndRoutine() {
         foreach (BattleUnit unit in GetUnits()) {
-            yield return unit.TurnStartRoutine();
+            if (!unit.IsDead()) {
+                yield return unit.TurnStartRoutine();
+            }
         }
     }
 

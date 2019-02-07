@@ -19,6 +19,7 @@ public class EnemyHUD : MonoBehaviour {
     public void Populate(BattleUnit unit) {
         text.text = unit.unit.unitName;
         hpBar.Populate(unit.Get(StatTag.MHP), unit.Get(StatTag.HP));
+        stagger.Populate(BattleUnit.MaxStagger, unit.Get(StatTag.STAGGER));
     }
 
     public IEnumerator enableRoutine(BattleUnit unit) {

@@ -24,7 +24,7 @@ public class NumericalBar : MonoBehaviour {
         Tweener tween = DOTween.To(() => currentValue, (float x) => {
             currentValue = x;
             this.actual.text = x.ToString();
-        }, currentValue, duration);
+        }, actual, duration);
         yield return CoUtils.RunParallel(new IEnumerator[] {
             CoUtils.RunTween(tween),
             bar.AnimateWithTimeRoutine(Mathf.Max(Mathf.Min(actual, max), 0.0f) / max, duration),

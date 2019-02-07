@@ -30,12 +30,12 @@ public class Battle : ScriptableObject {
         this.controller = controller;
         this.r = new System.Random();
 
-        foreach (Unit baseUnit in this.initialUnits) {
+        foreach (Unit baseUnit in initialUnits) {
             Unit unit = baseUnit.unique ? UnitFromKey(baseUnit.name) : Instantiate(baseUnit);
             AddUnit(new BattleUnit(unit, this));
         }
 
-        this.ai.ConfigureForBattle(this);
+        ai.ConfigureForBattle(this);
     }
 
     public void AddUnit(BattleUnit unit) {
