@@ -67,7 +67,7 @@ public class Battle : ScriptableObject {
     }
 
     public BattleFaction GetFaction(Alignment align) {
-        return this.factions[align];
+        return factions[align];
     }
 
     // === STATE MACHINE ===========================================================================
